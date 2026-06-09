@@ -162,7 +162,7 @@ function updateAll() {
   const h2 = formatHeure(document.getElementById('p_heure2').value);
   const dur2 = document.getElementById('p_duree2').value || '___';
 
-  const pSujet = `Proposition de rendez-vous - ${pRef} - Dossier : ${pDossier}`;
+  const pSujet = `Proposition de rendez-vous - REF${pRef} - Dossier : ${pDossier}`;
   const pCorps = `Madame, Monsieur,\n\nDans le cadre de votre dossier de recherche de fuite SOS FUITE D'EAU, référencé : ${pRef} - Dossier : ${pDossier}, nous vous proposons les créneaux suivants :\n\n• ${d1} à ${h1} (durée estimée : ${dur1})\nou\n• ${d2} à ${h2} (durée estimée : ${dur2})\n\nMerci de nous communiquer votre choix sous 48 heures. En cas de pluralité de personnes concernées, la date retenue sera celle recueillant la majorité des réponses favorables.\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence (ou celle de votre représentant) ainsi que l'accès aux locaux sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nÀ défaut de réponse dans le délai imparti, le syndic sera informé de l'absence de retour.\n\nCordialement,`;
   document.getElementById('p_link').href = `mailto:${pEmails}?subject=${encodeURIComponent(pSujet)}&body=${encodeURIComponent(pCorps)}`;
 
