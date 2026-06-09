@@ -21,7 +21,8 @@
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .bloc { margin-bottom: 1rem; padding: 12px; background: #f9f9f9; border-radius: 8px; border: 1px solid #eee; }
   .bloc-title { font-size: 12px; color: #888; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
-  .btn { width: 100%; margin-top: 0.25rem; padding: 12px; background: #003B6F; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; color: #fff; font-family: Arial, sans-serif; transition: background 0.15s; }
+  .btn-wrap { margin-top: 0.25rem; }
+  .btn { display: block; width: 100%; padding: 12px; background: #003B6F; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; color: #fff; font-family: Arial, sans-serif; text-align: center; text-decoration: none; transition: background 0.15s; }
   .btn:hover { background: #00295a; }
   .section { display: none; }
   .section.active { display: block; }
@@ -63,7 +64,9 @@
           <div class="field" style="margin:0"><label>Heure</label><input type="time" id="p_heure2"></div>
         </div>
       </div>
-      <button class="btn" onclick="genererProposition()">✉ Ouvrir dans Outlook</button>
+      <div class="btn-wrap">
+        <a id="p_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
+      </div>
     </div>
   </div>
 
@@ -86,7 +89,9 @@
         <label>Durée estimée</label>
         <input type="text" id="c_duree" placeholder="ex : 1h30" value="1h30">
       </div>
-      <button class="btn" onclick="genererConfirmation()">✉ Ouvrir dans Outlook</button>
+      <div class="btn-wrap">
+        <a id="c_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
+      </div>
     </div>
   </div>
 </div>
@@ -109,32 +114,31 @@ function formatHeure(timeStr) {
   return timeStr.replace(':', 'h');
 }
 
-function genererProposition() {
+function updateProposition() {
   const email = document.getElementById('p_email').value;
   const ref = document.getElementById('p_ref').value || '___';
   const d1 = formatDate(document.getElementById('p_date1').value);
   const h1 = formatHeure(document.getElementById('p_heure1').value);
   const d2 = formatDate(document.getElementById('p_date2').value);
   const h2 = formatHeure(document.getElementById('p_heure2').value);
-
   const sujet = `Proposition de rdv - SOS FUITE D'EAU - Dossier : ${ref}`;
   const corps = `Madame, Monsieur,\n\nDans le cadre du dossier de recherche de fuite référencé SOS FUITE D'EAU : ${ref}, nous vous proposons les créneaux suivants :\n\n• Le ${d1} à ${h1} (durée estimée : 1h30)\nou\n• Le ${d2} à ${h2} (durée estimée : 1h30)\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence ou celle d'un représentant ainsi que l'accès au logement sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nNous vous remercions de bien vouloir nous faire parvenir votre réponse sous 48 heures. En présence de plusieurs occupants ou propriétaires concernés, la date d'intervention retenue sera celle recueillant la majorité des réponses favorables parmi les personnes convoquées.\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, tout refus d'accès ou obstacle à la réalisation de l'intervention pourra être porté à la connaissance du syndic et engager la responsabilité du propriétaire ou de l'occupant pour les conséquences dommageables résultant du retard apporté au traitement du sinistre.\n\nÀ défaut de réponse dans ce délai, le syndic sera informé de l'absence de retour.\n\nCordialement,`;
-
-  window.location.href = `mailto:${email}?subject=${encodeURIComponent(sujet)}&body=${encodeURIComponent(corps)}`;
+  document.getElementById('p_link').href = `mailto:${email}?subject=${encodeURIComponent(sujet)}&body=${encodeURIComponent(corps)}`;
 }
 
-function genererConfirmation() {
+function updateConfirmation() {
   const email = document.getElementById('c_email').value;
   const ref = document.getElementById('c_ref').value || '___';
   const date = formatDate(document.getElementById('c_date').value);
   const heure = formatHeure(document.getElementById('c_heure').value);
   const duree = document.getElementById('c_duree').value || '1h30';
-
   const sujet = `Confirmation de rdv - SOS FUITE D'EAU - Dossier : ${ref}`;
   const corps = `Madame, Monsieur,\n\nNous vous confirmons votre rendez-vous de recherche de fuite prévu le ${date} à ${heure}.\n\nRéférence dossier SOS FUITE D'EAU : ${ref}\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence ou celle d'un représentant ainsi que l'accès au logement sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nLa durée estimée de l'intervention est d'environ ${duree}.\n\nTout refus d'accès susceptible de retarder l'identification ou la résolution du sinistre pourra engager la responsabilité du propriétaire en cas de préjudice causé à la copropriété ou aux lots voisins.\n\nCordialement,`;
-
-  window.location.href = `mailto:${email}?subject=${encodeURIComponent(sujet)}&body=${encodeURIComponent(corps)}`;
+  document.getElementById('c_link').href = `mailto:${email}?subject=${encodeURIComponent(sujet)}&body=${encodeURIComponent(corps)}`;
 }
+
+['p_email','p_ref','p_date1','p_heure1','p_date2','p_heure2'].forEach(id => document.getElementById(id).addEventListener('input', updateProposition));
+['c_email','c_ref','c_date','c_heure','c_duree'].forEach(id => document.getElementById(id).addEventListener('input', updateConfirmation));
 </script>
 </body>
 </html>
