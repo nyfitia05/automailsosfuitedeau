@@ -19,6 +19,7 @@
   .field input { width: 100%; padding: 9px 12px; border: 1px solid #ddd; border-radius: 7px; font-size: 14px; font-family: Arial, sans-serif; color: #1a1a1a; outline: none; }
   .field input:focus { border-color: #003B6F; }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
   .bloc { margin-bottom: 1rem; padding: 12px; background: #f9f9f9; border-radius: 8px; border: 1px solid #eee; }
   .bloc-title { font-size: 12px; color: #888; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
   .divider { height: 1px; background: #eee; margin: 1rem 0; }
@@ -61,16 +62,18 @@
       <div class="divider"></div>
       <div class="bloc">
         <div class="bloc-title">1ère proposition</div>
-        <div class="row">
+        <div class="row3">
           <div class="field" style="margin:0"><label>Date</label><input type="date" id="p_date1" oninput="updateAll()"></div>
           <div class="field" style="margin:0"><label>Heure</label><input type="time" id="p_heure1" oninput="updateAll()"></div>
+          <div class="field" style="margin:0"><label>Durée estimée</label><input type="text" id="p_duree1" placeholder="ex : 1h30" oninput="updateAll()"></div>
         </div>
       </div>
       <div class="bloc">
         <div class="bloc-title">2ème proposition</div>
-        <div class="row">
+        <div class="row3">
           <div class="field" style="margin:0"><label>Date</label><input type="date" id="p_date2" oninput="updateAll()"></div>
           <div class="field" style="margin:0"><label>Heure</label><input type="time" id="p_heure2" oninput="updateAll()"></div>
+          <div class="field" style="margin:0"><label>Durée estimée</label><input type="text" id="p_duree2" placeholder="ex : 1h30" oninput="updateAll()"></div>
         </div>
       </div>
       <a id="p_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
@@ -97,7 +100,7 @@
       </div>
       <div class="field">
         <label>Durée estimée</label>
-        <input type="text" id="c_duree" placeholder="ex : 1h30" value="1h30" oninput="updateAll()">
+        <input type="text" id="c_duree" placeholder="ex : 1h30" oninput="updateAll()">
       </div>
       <a id="c_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
     </div>
@@ -140,17 +143,20 @@ function updateAll() {
   const pRef = document.getElementById('p_ref').value || '___';
   const d1 = formatDate(document.getElementById('p_date1').value);
   const h1 = formatHeure(document.getElementById('p_heure1').value);
+  const dur1 = document.getElementById('p_duree1').value || '___';
   const d2 = formatDate(document.getElementById('p_date2').value);
   const h2 = formatHeure(document.getElementById('p_heure2').value);
+  const dur2 = document.getElementById('p_duree2').value || '___';
+
   const pSujet = `Proposition de rdv - SOS FUITE D'EAU - Dossier : ${pRef}`;
-  const pCorps = `Madame, Monsieur,\n\nDans le cadre du dossier de recherche de fuite référencé SOS FUITE D'EAU : ${pRef}, nous vous proposons les créneaux suivants :\n\n• Le ${d1} à ${h1} (durée estimée : 1h30)\nou\n• Le ${d2} à ${h2} (durée estimée : 1h30)\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence ou celle d'un représentant ainsi que l'accès au logement sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nNous vous remercions de bien vouloir nous faire parvenir votre réponse sous 48 heures. En présence de plusieurs occupants ou propriétaires concernés, la date d'intervention retenue sera celle recueillant la majorité des réponses favorables parmi les personnes convoquées.\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, tout refus d'accès ou obstacle à la réalisation de l'intervention pourra être porté à la connaissance du syndic et engager la responsabilité du propriétaire ou de l'occupant pour les conséquences dommageables résultant du retard apporté au traitement du sinistre.\n\nÀ défaut de réponse dans ce délai, le syndic sera informé de l'absence de retour.\n\nCordialement,`;
+  const pCorps = `Madame, Monsieur,\n\nDans le cadre de votre dossier de recherche de fuite SOS FUITE D'EAU, référencé : ${pRef}, nous vous proposons les créneaux suivants :\n\n• ${d1} à ${h1} (durée estimée : ${dur1})\nou\n• ${d2} à ${h2} (durée estimée : ${dur2})\n\nMerci de nous communiquer votre choix sous 48 heures. En cas de pluralité de personnes concernées, la date retenue sera celle recueillant la majorité des réponses favorables.\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence (ou celle de votre représentant) ainsi que l'accès aux locaux sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nÀ défaut de réponse dans le délai imparti, le syndic sera informé de l'absence de retour.\n\nCordialement,`;
   document.getElementById('p_link').href = `mailto:${pEmails}?subject=${encodeURIComponent(pSujet)}&body=${encodeURIComponent(pCorps)}`;
 
   const cEmails = getEmails('c_emails');
   const cRef = document.getElementById('c_ref').value || '___';
   const cDate = formatDate(document.getElementById('c_date').value);
   const cHeure = formatHeure(document.getElementById('c_heure').value);
-  const cDuree = document.getElementById('c_duree').value || '1h30';
+  const cDuree = document.getElementById('c_duree').value || '___';
   const cSujet = `Confirmation de rdv - SOS FUITE D'EAU - Dossier : ${cRef}`;
   const cCorps = `Madame, Monsieur,\n\nNous vous confirmons votre rendez-vous de recherche de fuite prévu le ${cDate} à ${cHeure}.\n\nRéférence dossier SOS FUITE D'EAU : ${cRef}\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence ou celle d'un représentant ainsi que l'accès au logement sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nLa durée estimée de l'intervention est d'environ ${cDuree}.\n\nTout refus d'accès susceptible de retarder l'identification ou la résolution du sinistre pourra engager la responsabilité du propriétaire en cas de préjudice causé à la copropriété ou aux lots voisins.\n\nCordialement,`;
   document.getElementById('c_link').href = `mailto:${cEmails}?subject=${encodeURIComponent(cSujet)}&body=${encodeURIComponent(cCorps)}`;
