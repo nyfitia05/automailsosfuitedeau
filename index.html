@@ -7,7 +7,7 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: Arial, sans-serif; background: #f5f5f5; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem; }
-  .wrap { width: 100%; max-width: 560px; }
+  .wrap { width: 100%; max-width: 580px; }
   .logo { text-align: center; margin-bottom: 0.5rem; font-size: 13px; color: #888; letter-spacing: 0.05em; text-transform: uppercase; }
   h1 { font-size: 17px; font-weight: 600; color: #1a1a1a; margin-bottom: 1.5rem; text-align: center; }
   .tabs { display: flex; gap: 8px; margin-bottom: 1.25rem; }
@@ -16,10 +16,11 @@
   .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.5rem; }
   .field { margin-bottom: 1rem; }
   .field label { display: block; font-size: 13px; color: #555; margin-bottom: 5px; font-weight: 500; }
-  .field input { width: 100%; padding: 9px 12px; border: 1px solid #ddd; border-radius: 7px; font-size: 14px; font-family: Arial, sans-serif; color: #1a1a1a; outline: none; }
-  .field input:focus { border-color: #003B6F; }
+  .field input, .field select { width: 100%; padding: 9px 12px; border: 1px solid #ddd; border-radius: 7px; font-size: 14px; font-family: Arial, sans-serif; color: #1a1a1a; outline: none; background: #fff; }
+  .field input:focus, .field select:focus { border-color: #003B6F; }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .row4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
   .bloc { margin-bottom: 1rem; padding: 12px; background: #f9f9f9; border-radius: 8px; border: 1px solid #eee; }
   .bloc-title { font-size: 12px; color: #888; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
   .divider { height: 1px; background: #eee; margin: 1rem 0; }
@@ -34,6 +35,9 @@
   .btn:hover { background: #00295a; }
   .section { display: none; }
   .section.active { display: block; }
+  .duree-wrap { display: flex; gap: 6px; align-items: center; }
+  .duree-wrap select { flex: 1; }
+  .duree-sep { font-size: 13px; color: #888; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -46,6 +50,7 @@
     <button class="tab" onclick="switchTab('confirmation')">Confirmation de RDV</button>
   </div>
 
+  <!-- PROPOSITION -->
   <div id="proposition" class="section active">
     <div class="card">
       <div class="field">
@@ -58,34 +63,75 @@
       <div class="row">
         <div class="field">
           <label>Référence (Ref)</label>
-          <input type="text" id="p_ref" placeholder="ex : RefXXX" oninput="updateAll()">
+          <input type="text" id="p_ref" placeholder="ex : REF7412" oninput="updateAll()">
         </div>
         <div class="field">
           <label>Numéro de dossier</label>
-          <input type="text" id="p_dossier" placeholder="ex : 7485" oninput="updateAll()">
+          <input type="text" id="p_dossier" placeholder="ex : 8621" oninput="updateAll()">
         </div>
       </div>
       <div class="divider"></div>
       <div class="bloc">
         <div class="bloc-title">1ère proposition</div>
-        <div class="row3">
+        <div class="row" style="margin-bottom:10px">
           <div class="field" style="margin:0"><label>Date</label><input type="date" id="p_date1" oninput="updateAll()"></div>
           <div class="field" style="margin:0"><label>Heure</label><input type="time" id="p_heure1" oninput="updateAll()"></div>
-          <div class="field" style="margin:0"><label>Durée estimée</label><input type="text" id="p_duree1" placeholder="ex : 1h30" oninput="updateAll()"></div>
+        </div>
+        <div class="field" style="margin:0">
+          <label>Durée estimée</label>
+          <div class="duree-wrap">
+            <select id="p_h1" onchange="updateAll()">
+              <option value="0">0h</option>
+              <option value="1" selected>1h</option>
+              <option value="2">2h</option>
+              <option value="3">3h</option>
+              <option value="4">4h</option>
+              <option value="5">5h</option>
+              <option value="6">6h</option>
+            </select>
+            <span class="duree-sep">heures</span>
+            <select id="p_m1" onchange="updateAll()">
+              <option value="00" selected>00 min</option>
+              <option value="15">15 min</option>
+              <option value="30">30 min</option>
+              <option value="45">45 min</option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="bloc">
         <div class="bloc-title">2ème proposition</div>
-        <div class="row3">
+        <div class="row" style="margin-bottom:10px">
           <div class="field" style="margin:0"><label>Date</label><input type="date" id="p_date2" oninput="updateAll()"></div>
           <div class="field" style="margin:0"><label>Heure</label><input type="time" id="p_heure2" oninput="updateAll()"></div>
-          <div class="field" style="margin:0"><label>Durée estimée</label><input type="text" id="p_duree2" placeholder="ex : 1h30" oninput="updateAll()"></div>
+        </div>
+        <div class="field" style="margin:0">
+          <label>Durée estimée</label>
+          <div class="duree-wrap">
+            <select id="p_h2" onchange="updateAll()">
+              <option value="0">0h</option>
+              <option value="1" selected>1h</option>
+              <option value="2">2h</option>
+              <option value="3">3h</option>
+              <option value="4">4h</option>
+              <option value="5">5h</option>
+              <option value="6">6h</option>
+            </select>
+            <span class="duree-sep">heures</span>
+            <select id="p_m2" onchange="updateAll()">
+              <option value="00" selected>00 min</option>
+              <option value="15">15 min</option>
+              <option value="30">30 min</option>
+              <option value="45">45 min</option>
+            </select>
+          </div>
         </div>
       </div>
       <a id="p_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
     </div>
   </div>
 
+  <!-- CONFIRMATION -->
   <div id="confirmation" class="section">
     <div class="card">
       <div class="field">
@@ -98,11 +144,11 @@
       <div class="row">
         <div class="field">
           <label>Référence (Ref)</label>
-          <input type="text" id="c_ref" placeholder="ex : RefXXX" oninput="updateAll()">
+          <input type="text" id="c_ref" placeholder="ex : REF7412" oninput="updateAll()">
         </div>
         <div class="field">
           <label>Numéro de dossier</label>
-          <input type="text" id="c_dossier" placeholder="ex : 7485" oninput="updateAll()">
+          <input type="text" id="c_dossier" placeholder="ex : 8621" oninput="updateAll()">
         </div>
       </div>
       <div class="divider"></div>
@@ -112,7 +158,24 @@
       </div>
       <div class="field">
         <label>Durée estimée</label>
-        <input type="text" id="c_duree" placeholder="ex : 1h30" oninput="updateAll()">
+        <div class="duree-wrap">
+          <select id="c_h" onchange="updateAll()">
+            <option value="0">0h</option>
+            <option value="1" selected>1h</option>
+            <option value="2">2h</option>
+            <option value="3">3h</option>
+            <option value="4">4h</option>
+            <option value="5">5h</option>
+            <option value="6">6h</option>
+          </select>
+          <span class="duree-sep">heures</span>
+          <select id="c_m" onchange="updateAll()">
+            <option value="00" selected>00 min</option>
+            <option value="15">15 min</option>
+            <option value="30">30 min</option>
+            <option value="45">45 min</option>
+          </select>
+        </div>
       </div>
       <a id="c_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
     </div>
@@ -150,6 +213,14 @@ function formatHeure(h) {
   return h.replace(':', 'h');
 }
 
+function formatDuree(hId, mId) {
+  const h = document.getElementById(hId).value;
+  const m = document.getElementById(mId).value;
+  if (h === '0' && m === '00') return '___';
+  if (m === '00') return `${h}h`;
+  return `${h}h${m}`;
+}
+
 function updateAll() {
   // PROPOSITION
   const pEmails = getEmails('p_emails');
@@ -157,12 +228,12 @@ function updateAll() {
   const pDossier = document.getElementById('p_dossier').value || 'XXXX';
   const d1 = formatDate(document.getElementById('p_date1').value);
   const h1 = formatHeure(document.getElementById('p_heure1').value);
-  const dur1 = document.getElementById('p_duree1').value || '___';
+  const dur1 = formatDuree('p_h1', 'p_m1');
   const d2 = formatDate(document.getElementById('p_date2').value);
   const h2 = formatHeure(document.getElementById('p_heure2').value);
-  const dur2 = document.getElementById('p_duree2').value || '___';
+  const dur2 = formatDuree('p_h2', 'p_m2');
 
-  const pSujet = `Proposition de rendez-vous - REF${pRef} - Dossier : ${pDossier}`;
+  const pSujet = `Proposition de rendez-vous - ${pRef} - Dossier : ${pDossier}`;
   const pCorps = `Madame, Monsieur,\n\nDans le cadre de votre dossier de recherche de fuite SOS FUITE D'EAU, référencé : ${pRef} - Dossier : ${pDossier}, nous vous proposons les créneaux suivants :\n\n• ${d1} à ${h1} (durée estimée : ${dur1})\nou\n• ${d2} à ${h2} (durée estimée : ${dur2})\n\nMerci de nous communiquer votre choix sous 48 heures. En cas de pluralité de personnes concernées, la date retenue sera celle recueillant la majorité des réponses favorables.\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence (ou celle de votre représentant) ainsi que l'accès aux locaux sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nÀ défaut de réponse dans le délai imparti, le syndic sera informé de l'absence de retour.\n\nCordialement,`;
   document.getElementById('p_link').href = `mailto:${pEmails}?subject=${encodeURIComponent(pSujet)}&body=${encodeURIComponent(pCorps)}`;
 
@@ -172,10 +243,10 @@ function updateAll() {
   const cDossier = document.getElementById('c_dossier').value || 'XXXX';
   const cDate = formatDate(document.getElementById('c_date').value);
   const cHeure = formatHeure(document.getElementById('c_heure').value);
-  const cDuree = document.getElementById('c_duree').value || '___';
+  const cDuree = formatDuree('c_h', 'c_m');
 
   const cSujet = `Confirmation de rendez-vous - ${cRef} - Dossier : ${cDossier}`;
-  const cCorps = `Madame, Monsieur,\n\nNous vous confirmons votre rendez-vous de recherche de fuite prévu le ${cDate} à ${cHeure}.\n\nRéférence dossier SOS FUITE D'EAU : ${cRef} - Dossier : ${cDossier}\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence ou celle d'un représentant ainsi que l'accès au logement sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nLa durée estimée de l'intervention est d'environ ${cDuree}.\n\nTout refus d'accès susceptible de retarder l'identification ou la résolution du sinistre pourra engager la responsabilité du propriétaire en cas de préjudice causé à la copropriété ou aux lots voisins.\n\nCordialement,`;
+  const cCorps = `Madame, Monsieur,\n\nNous vous confirmons votre rendez-vous de recherche de fuite prévu le ${cDate} à ${cHeure}.\n\nVotre référence de dossier auprès de SOS FUITE D'EAU est la suivante ${cRef} - Dossier : ${cDossier}\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence ou celle d'un représentant ainsi que l'accès au logement sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nLa durée estimée de l'intervention est d'environ ${cDuree}.\n\nTout refus d'accès susceptible de retarder l'identification ou la résolution du sinistre pourra engager la responsabilité du propriétaire en cas de préjudice causé à la copropriété ou aux lots voisins.\n\nCordialement,`;
   document.getElementById('c_link').href = `mailto:${cEmails}?subject=${encodeURIComponent(cSujet)}&body=${encodeURIComponent(cCorps)}`;
 }
 </script>
