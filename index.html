@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SOS Fuite d'Eau — Générateur d'e-mails</title>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: Arial, sans-serif; background: #f5f5f5; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem; }
@@ -33,33 +32,10 @@
   .duree-wrap { display: flex; gap: 6px; align-items: center; }
   .duree-wrap select { flex: 1; }
   .duree-sep { font-size: 13px; color: #888; white-space: nowrap; }
-  .sig-preview { margin-top: 8px; display: none; }
-  .sig-preview img { max-width: 100%; border-radius: 6px; border: 1px solid #eee; }
-  .btn-apercu { display: block; width: 100%; padding: 12px; background: #fff; border: 1.5px solid #003B6F; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; color: #003B6F; font-family: Arial, sans-serif; text-align: center; margin-bottom: 10px; }
-  .btn-apercu:hover { background: #f0f4f8; }
-  .btn-envoyer { display: block; width: 100%; padding: 12px; background: #003B6F; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; color: #fff; font-family: Arial, sans-serif; text-align: center; transition: background 0.15s; }
-  .btn-envoyer:hover { background: #00295a; }
-  .btn-envoyer:disabled { background: #aaa; cursor: not-allowed; }
+  .btn { display: block; width: 100%; padding: 12px; background: #003B6F; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; color: #fff; font-family: Arial, sans-serif; text-align: center; text-decoration: none; transition: background 0.15s; }
+  .btn:hover { background: #00295a; }
   .section { display: none; }
   .section.active { display: block; }
-
-  /* MODAL APERCU */
-  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: #fff; border-radius: 12px; width: 90%; max-width: 640px; max-height: 85vh; overflow-y: auto; padding: 1.5rem; }
-  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-  .modal-header h2 { font-size: 15px; font-weight: 600; color: #1a1a1a; }
-  .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #888; }
-  .modal-sujet { font-size: 13px; color: #888; margin-bottom: 0.5rem; }
-  .modal-sujet span { color: #1a1a1a; font-weight: 500; }
-  .modal-body { border: 1px solid #eee; border-radius: 8px; padding: 1.25rem; font-size: 14px; line-height: 1.7; }
-  .modal-actions { display: flex; gap: 10px; margin-top: 1rem; }
-  .modal-actions button { flex: 1; padding: 11px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: Arial, sans-serif; }
-  .btn-annuler { background: #fff; border: 1px solid #ddd; color: #666; }
-  .btn-confirmer { background: #003B6F; border: none; color: #fff; }
-  .btn-confirmer:hover { background: #00295a; }
-  .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #1a1a1a; color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 14px; display: none; z-index: 2000; }
-  .toast.show { display: block; }
 </style>
 </head>
 <body>
@@ -72,164 +48,98 @@
     <button class="tab" onclick="switchTab('confirmation')">Confirmation de RDV</button>
   </div>
 
-  <!-- PROPOSITION -->
   <div id="proposition" class="section active">
     <div class="card">
       <div class="field">
         <label>Destinataires</label>
         <div id="p_emails">
-          <div class="email-row"><input type="email" placeholder="client@exemple.fr"></div>
+          <div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div>
         </div>
         <button class="btn-add" onclick="ajouterEmail('p_emails')">+ Ajouter un destinataire</button>
-      </div>
-      <div class="field">
-        <label>E-mail de la gestionnaire (expéditeur)</label>
-        <input type="email" id="p_from" placeholder="gestionnaire@sosfuitedeau.com">
-      </div>
-      <div class="field">
-        <label>Nom de la gestionnaire</label>
-        <input type="text" id="p_from_name" placeholder="ex : Mina">
       </div>
       <div class="row">
         <div class="field">
           <label>Référence (Ref)</label>
-          <input type="text" id="p_ref" placeholder="ex : REF7412">
+          <input type="text" id="p_ref" placeholder="ex : REF7412" oninput="updateAll()">
         </div>
         <div class="field">
           <label>Numéro de dossier</label>
-          <input type="text" id="p_dossier" placeholder="ex : 8621">
+          <input type="text" id="p_dossier" placeholder="ex : 8621" oninput="updateAll()">
         </div>
       </div>
       <div class="divider"></div>
       <div class="bloc">
         <div class="bloc-title">1ère proposition</div>
         <div class="row" style="margin-bottom:10px">
-          <div class="field" style="margin:0"><label>Date</label><input type="date" id="p_date1"></div>
-          <div class="field" style="margin:0"><label>Heure</label><input type="time" id="p_heure1"></div>
+          <div class="field" style="margin:0"><label>Date</label><input type="date" id="p_date1" oninput="updateAll()"></div>
+          <div class="field" style="margin:0"><label>Heure</label><input type="time" id="p_heure1" oninput="updateAll()"></div>
         </div>
         <div class="field" style="margin:0">
           <label>Durée estimée</label>
           <div class="duree-wrap">
-            <select id="p_h1"><option value="0">0h</option><option value="1" selected>1h</option><option value="2">2h</option><option value="3">3h</option><option value="4">4h</option><option value="5">5h</option><option value="6">6h</option></select>
+            <select id="p_h1" onchange="updateAll()"><option value="0">0h</option><option value="1" selected>1h</option><option value="2">2h</option><option value="3">3h</option><option value="4">4h</option><option value="5">5h</option><option value="6">6h</option></select>
             <span class="duree-sep">heures</span>
-            <select id="p_m1"><option value="00" selected>00 min</option><option value="15">15 min</option><option value="30">30 min</option><option value="45">45 min</option></select>
+            <select id="p_m1" onchange="updateAll()"><option value="00" selected>00 min</option><option value="15">15 min</option><option value="30">30 min</option><option value="45">45 min</option></select>
           </div>
         </div>
       </div>
       <div class="bloc">
         <div class="bloc-title">2ème proposition</div>
         <div class="row" style="margin-bottom:10px">
-          <div class="field" style="margin:0"><label>Date</label><input type="date" id="p_date2"></div>
-          <div class="field" style="margin:0"><label>Heure</label><input type="time" id="p_heure2"></div>
+          <div class="field" style="margin:0"><label>Date</label><input type="date" id="p_date2" oninput="updateAll()"></div>
+          <div class="field" style="margin:0"><label>Heure</label><input type="time" id="p_heure2" oninput="updateAll()"></div>
         </div>
         <div class="field" style="margin:0">
           <label>Durée estimée</label>
           <div class="duree-wrap">
-            <select id="p_h2"><option value="0">0h</option><option value="1" selected>1h</option><option value="2">2h</option><option value="3">3h</option><option value="4">4h</option><option value="5">5h</option><option value="6">6h</option></select>
+            <select id="p_h2" onchange="updateAll()"><option value="0">0h</option><option value="1" selected>1h</option><option value="2">2h</option><option value="3">3h</option><option value="4">4h</option><option value="5">5h</option><option value="6">6h</option></select>
             <span class="duree-sep">heures</span>
-            <select id="p_m2"><option value="00" selected>00 min</option><option value="15">15 min</option><option value="30">30 min</option><option value="45">45 min</option></select>
+            <select id="p_m2" onchange="updateAll()"><option value="00" selected>00 min</option><option value="15">15 min</option><option value="30">30 min</option><option value="45">45 min</option></select>
           </div>
         </div>
       </div>
-      <div class="divider"></div>
-      <div class="field">
-        <label>Signature</label>
-        <select id="p_signature" onchange="previewSig('p_signature','p_sig_preview')">
-          <option value="">— Choisir une signature —</option>
-          <option value="https://sosfuitedeau.com/wp-content/uploads/2026/06/Mina.png">Mina — Plateau technique</option>
-          <option value="https://sosfuitedeau.com/wp-content/uploads/2026/06/Aurelie.png">Aurélie</option>
-          <option value="https://sosfuitedeau.com/wp-content/uploads/2026/06/Travaux-Aurelie.png">Aurélie — Travaux</option>
-          <option value="https://sosfuitedeau.com/wp-content/uploads/2026/06/Equipe.png">Équipe</option>
-        </select>
-        <div class="sig-preview" id="p_sig_preview"><img src="" alt="Aperçu signature"></div>
-      </div>
-      <button class="btn-apercu" onclick="ouvrirApercu('proposition')">👁 Aperçu avant envoi</button>
-      <button class="btn-envoyer" id="p_btn" onclick="envoyer('proposition')">✉ Envoyer</button>
+      <a id="p_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
     </div>
   </div>
 
-  <!-- CONFIRMATION -->
   <div id="confirmation" class="section">
     <div class="card">
       <div class="field">
         <label>Destinataires</label>
         <div id="c_emails">
-          <div class="email-row"><input type="email" placeholder="client@exemple.fr"></div>
+          <div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div>
         </div>
         <button class="btn-add" onclick="ajouterEmail('c_emails')">+ Ajouter un destinataire</button>
-      </div>
-      <div class="field">
-        <label>E-mail de la gestionnaire (expéditeur)</label>
-        <input type="email" id="c_from" placeholder="gestionnaire@sosfuitedeau.com">
-      </div>
-      <div class="field">
-        <label>Nom de la gestionnaire</label>
-        <input type="text" id="c_from_name" placeholder="ex : Mina">
       </div>
       <div class="row">
         <div class="field">
           <label>Référence (Ref)</label>
-          <input type="text" id="c_ref" placeholder="ex : REF7412">
+          <input type="text" id="c_ref" placeholder="ex : REF7412" oninput="updateAll()">
         </div>
         <div class="field">
           <label>Numéro de dossier</label>
-          <input type="text" id="c_dossier" placeholder="ex : 8621">
+          <input type="text" id="c_dossier" placeholder="ex : 8621" oninput="updateAll()">
         </div>
       </div>
       <div class="divider"></div>
       <div class="row">
-        <div class="field"><label>Date du RDV</label><input type="date" id="c_date"></div>
-        <div class="field"><label>Heure du RDV</label><input type="time" id="c_heure"></div>
+        <div class="field"><label>Date du RDV</label><input type="date" id="c_date" oninput="updateAll()"></div>
+        <div class="field"><label>Heure du RDV</label><input type="time" id="c_heure" oninput="updateAll()"></div>
       </div>
       <div class="field">
         <label>Durée estimée</label>
         <div class="duree-wrap">
-          <select id="c_h"><option value="0">0h</option><option value="1" selected>1h</option><option value="2">2h</option><option value="3">3h</option><option value="4">4h</option><option value="5">5h</option><option value="6">6h</option></select>
+          <select id="c_h" onchange="updateAll()"><option value="0">0h</option><option value="1" selected>1h</option><option value="2">2h</option><option value="3">3h</option><option value="4">4h</option><option value="5">5h</option><option value="6">6h</option></select>
           <span class="duree-sep">heures</span>
-          <select id="c_m"><option value="00" selected>00 min</option><option value="15">15 min</option><option value="30">30 min</option><option value="45">45 min</option></select>
+          <select id="c_m" onchange="updateAll()"><option value="00" selected>00 min</option><option value="15">15 min</option><option value="30">30 min</option><option value="45">45 min</option></select>
         </div>
       </div>
-      <div class="divider"></div>
-      <div class="field">
-        <label>Signature</label>
-        <select id="c_signature" onchange="previewSig('c_signature','c_sig_preview')">
-          <option value="">— Choisir une signature —</option>
-          <option value="https://sosfuitedeau.com/wp-content/uploads/2026/06/Mina.png">Mina — Plateau technique</option>
-          <option value="https://sosfuitedeau.com/wp-content/uploads/2026/06/Aurelie.png">Aurélie</option>
-          <option value="https://sosfuitedeau.com/wp-content/uploads/2026/06/Travaux-Aurelie.png">Aurélie — Travaux</option>
-          <option value="https://sosfuitedeau.com/wp-content/uploads/2026/06/Equipe.png">Équipe</option>
-        </select>
-        <div class="sig-preview" id="c_sig_preview"><img src="" alt="Aperçu signature"></div>
-      </div>
-      <button class="btn-apercu" onclick="ouvrirApercu('confirmation')">👁 Aperçu avant envoi</button>
-      <button class="btn-envoyer" id="c_btn" onclick="envoyer('confirmation')">✉ Envoyer</button>
+      <a id="c_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
     </div>
   </div>
 </div>
-
-<!-- MODAL APERCU -->
-<div class="modal-overlay" id="modal">
-  <div class="modal">
-    <div class="modal-header">
-      <h2>Aperçu du mail</h2>
-      <button class="modal-close" onclick="fermerModal()">×</button>
-    </div>
-    <div class="modal-sujet">Objet : <span id="modal_sujet"></span></div>
-    <div class="modal-body" id="modal_body"></div>
-    <div class="modal-actions">
-      <button class="btn-annuler" onclick="fermerModal()">Modifier</button>
-      <button class="btn-confirmer" id="modal_confirmer">✉ Confirmer et envoyer</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
 
 <script>
-emailjs.init('WRObk6XItB_ad2Wcv');
-
-let currentType = '';
-
 function switchTab(tab) {
   document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', (tab==='proposition'&&i===0)||(tab==='confirmation'&&i===1)));
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -240,13 +150,13 @@ function ajouterEmail(containerId) {
   const container = document.getElementById(containerId);
   const row = document.createElement('div');
   row.className = 'email-row';
-  row.innerHTML = `<input type="email" placeholder="client@exemple.fr"><button class="btn-remove" onclick="this.parentElement.remove()">×</button>`;
+  row.innerHTML = `<input type="email" placeholder="client@exemple.fr" oninput="updateAll()"><button class="btn-remove" onclick="this.parentElement.remove(); updateAll()">×</button>`;
   container.appendChild(row);
 }
 
 function getEmails(containerId) {
   return Array.from(document.querySelectorAll(`#${containerId} input`))
-    .map(i => i.value.trim()).filter(v => v).join(', ');
+    .map(i => i.value.trim()).filter(v => v).join(',');
 }
 
 function formatDate(d) {
@@ -268,105 +178,31 @@ function formatDuree(hId, mId) {
   return `${h}h${m}`;
 }
 
-function previewSig(selectId, previewId) {
-  const val = document.getElementById(selectId).value;
-  const preview = document.getElementById(previewId);
-  if (val) { preview.style.display = 'block'; preview.querySelector('img').src = val; }
-  else { preview.style.display = 'none'; }
-}
+function updateAll() {
+  const pEmails = getEmails('p_emails');
+  const pRef = document.getElementById('p_ref').value || 'RefXXX';
+  const pDossier = document.getElementById('p_dossier').value || 'XXXX';
+  const d1 = formatDate(document.getElementById('p_date1').value);
+  const h1 = formatHeure(document.getElementById('p_heure1').value);
+  const dur1 = formatDuree('p_h1', 'p_m1');
+  const d2 = formatDate(document.getElementById('p_date2').value);
+  const h2 = formatHeure(document.getElementById('p_heure2').value);
+  const dur2 = formatDuree('p_h2', 'p_m2');
 
-function buildData(type) {
-  if (type === 'proposition') {
-    const ref = document.getElementById('p_ref').value || 'RefXXX';
-    const dossier = document.getElementById('p_dossier').value || 'XXXX';
-    const d1 = formatDate(document.getElementById('p_date1').value);
-    const h1 = formatHeure(document.getElementById('p_heure1').value);
-    const dur1 = formatDuree('p_h1', 'p_m1');
-    const d2 = formatDate(document.getElementById('p_date2').value);
-    const h2 = formatHeure(document.getElementById('p_heure2').value);
-    const dur2 = formatDuree('p_h2', 'p_m2');
-    const sig = document.getElementById('p_signature').value;
+  const pSujet = `Proposition de rendez-vous - ${pRef} - Dossier : ${pDossier}`;
+  const pCorps = `Madame, Monsieur,\n\nDans le cadre de votre dossier de recherche de fuite SOS FUITE D'EAU, référencé : ${pRef} - Dossier : ${pDossier}, nous vous proposons les créneaux suivants :\n\n• ${d1} à ${h1} (durée estimée : ${dur1})\nou\n• ${d2} à ${h2} (durée estimée : ${dur2})\n\nMerci de nous communiquer votre choix sous 48 heures. En cas de pluralité de personnes concernées, la date retenue sera celle recueillant la majorité des réponses favorables.\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence (ou celle de votre représentant) ainsi que l'accès aux locaux sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nÀ défaut de réponse dans le délai imparti, le syndic sera informé de l'absence de retour.\n\nCordialement,`;
+  document.getElementById('p_link').href = `mailto:${pEmails}?subject=${encodeURIComponent(pSujet)}&body=${encodeURIComponent(pCorps)}`;
 
-    const sujet = `Proposition de rendez-vous - ${ref} - Dossier : ${dossier}`;
-    const corps = `<p>Madame, Monsieur,</p>
-<p>Dans le cadre de votre dossier de recherche de fuite SOS FUITE D'EAU, référencé : <strong style="background:#FFFF00">${ref}</strong> - Dossier : <strong style="background:#FFFF00">${dossier}</strong>, nous vous proposons les créneaux suivants :</p>
-<p>• <strong style="background:#FFFF00">${d1}</strong> à <strong style="background:#FFFF00">${h1}</strong> (durée estimée : <strong style="background:#FFFF00">${dur1}</strong>)<br>ou<br>• <strong style="background:#FFFF00">${d2}</strong> à <strong style="background:#FFFF00">${h2}</strong> (durée estimée : <strong style="background:#FFFF00">${dur2}</strong>)</p>
-<p>Merci de nous communiquer votre choix sous 48 heures. En cas de pluralité de personnes concernées, la date retenue sera celle recueillant la majorité des réponses favorables.</p>
-<p><strong>Conformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence (ou celle de votre représentant) ainsi que l'accès aux locaux sont indispensables à la réalisation de cette intervention mandatée par le syndic.</strong></p>
-<p>À défaut de réponse dans le délai imparti, le syndic sera informé de l'absence de retour.</p>
-<p>Cordialement,</p>
-${sig ? `<p><a href="https://sosfuitedeau.com"><img src="${sig}" alt="Signature" style="max-width:400px"></a></p>` : ''}`;
+  const cEmails = getEmails('c_emails');
+  const cRef = document.getElementById('c_ref').value || 'RefXXX';
+  const cDossier = document.getElementById('c_dossier').value || 'XXXX';
+  const cDate = formatDate(document.getElementById('c_date').value);
+  const cHeure = formatHeure(document.getElementById('c_heure').value);
+  const cDuree = formatDuree('c_h', 'c_m');
 
-    return { sujet, corps, to: getEmails('p_emails'), from: document.getElementById('p_from').value, from_name: document.getElementById('p_from_name').value };
-  } else {
-    const ref = document.getElementById('c_ref').value || 'RefXXX';
-    const dossier = document.getElementById('c_dossier').value || 'XXXX';
-    const date = formatDate(document.getElementById('c_date').value);
-    const heure = formatHeure(document.getElementById('c_heure').value);
-    const duree = formatDuree('c_h', 'c_m');
-    const sig = document.getElementById('c_signature').value;
-
-    const sujet = `Confirmation de rendez-vous - ${ref} - Dossier : ${dossier}`;
-    const corps = `<p>Madame, Monsieur,</p>
-<p>Nous vous confirmons votre rendez-vous de recherche de fuite prévu le <strong style="background:#FFFF00">${date}</strong> à <strong style="background:#FFFF00">${heure}</strong>.</p>
-<p>Votre référence de dossier auprès de <strong>SOS FUITE D'EAU</strong> est la suivante <strong style="background:#FFFF00">${ref}</strong> - Dossier : <strong style="background:#FFFF00">${dossier}</strong></p>
-<p><strong>Conformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence ou celle d'un représentant ainsi que l'accès au logement sont indispensables à la réalisation de cette intervention mandatée par le syndic.</strong></p>
-<p>La durée estimée de l'intervention est d'environ <strong style="background:#FFFF00">${duree}</strong>.</p>
-<p><strong>Tout refus d'accès susceptible de retarder l'identification ou la résolution du sinistre pourra engager la responsabilité du propriétaire en cas de préjudice causé à la copropriété ou aux lots voisins.</strong></p>
-<p>Cordialement,</p>
-${sig ? `<p><a href="https://sosfuitedeau.com"><img src="${sig}" alt="Signature" style="max-width:400px"></a></p>` : ''}`;
-
-    return { sujet, corps, to: getEmails('c_emails'), from: document.getElementById('c_from').value, from_name: document.getElementById('c_from_name').value };
-  }
-}
-
-function ouvrirApercu(type) {
-  currentType = type;
-  const data = buildData(type);
-  document.getElementById('modal_sujet').textContent = data.sujet;
-  document.getElementById('modal_body').innerHTML = data.corps;
-  document.getElementById('modal_confirmer').onclick = () => envoyerMaintenant(data);
-  document.getElementById('modal').classList.add('open');
-}
-
-function fermerModal() {
-  document.getElementById('modal').classList.remove('open');
-}
-
-function envoyer(type) {
-  ouvrirApercu(type);
-}
-
-function envoyerMaintenant(data) {
-  fermerModal();
-  const btnId = currentType === 'proposition' ? 'p_btn' : 'c_btn';
-  const btn = document.getElementById(btnId);
-  btn.disabled = true;
-  btn.textContent = 'Envoi en cours...';
-
-  emailjs.send('service_310qkf3', 'template_tbilgou', {
-    sujet: data.sujet,
-    corps: data.corps,
-    to_email: data.to,
-    from_name: data.from_name || 'SOS Fuite d\'Eau',
-    reply_to: data.from || ''
-  }).then(() => {
-    showToast('✅ Mail envoyé avec succès !');
-    btn.disabled = false;
-    btn.textContent = '✉ Envoyer';
-  }).catch((err) => {
-    showToast('❌ Erreur d\'envoi. Vérifiez votre connexion.');
-    console.error(err);
-    btn.disabled = false;
-    btn.textContent = '✉ Envoyer';
-  });
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 4000);
+  const cSujet = `Confirmation de rendez-vous - ${cRef} - Dossier : ${cDossier}`;
+  const cCorps = `Madame, Monsieur,\n\nNous vous confirmons votre rendez-vous de recherche de fuite prévu le ${cDate} à ${cHeure}.\n\nVotre référence de dossier auprès de SOS FUITE D'EAU est la suivante ${cRef} - Dossier : ${cDossier}\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence ou celle d'un représentant ainsi que l'accès au logement sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nLa durée estimée de l'intervention est d'environ ${cDuree}.\n\nTout refus d'accès susceptible de retarder l'identification ou la résolution du sinistre pourra engager la responsabilité du propriétaire en cas de préjudice causé à la copropriété ou aux lots voisins.\n\nCordialement,`;
+  document.getElementById('c_link').href = `mailto:${cEmails}?subject=${encodeURIComponent(cSujet)}&body=${encodeURIComponent(cCorps)}`;
 }
 </script>
 </body>
