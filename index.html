@@ -63,7 +63,7 @@
           <input type="text" id="p_ref" placeholder="ex : REF7412" oninput="updateAll()">
         </div>
         <div class="field">
-          <label>Numéro de dossier</label>
+          <label>Numéro d'intervention</label>
           <input type="text" id="p_dossier" placeholder="ex : 8621" oninput="updateAll()">
         </div>
       </div>
@@ -117,7 +117,7 @@
           <input type="text" id="c_ref" placeholder="ex : REF7412" oninput="updateAll()">
         </div>
         <div class="field">
-          <label>Numéro de dossier</label>
+          <label>Numéro d'intervention</label>
           <input type="text" id="c_dossier" placeholder="ex : 8621" oninput="updateAll()">
         </div>
       </div>
@@ -134,7 +134,7 @@
           <select id="c_m" onchange="updateAll()"><option value="00" selected>00 min</option><option value="15">15 min</option><option value="30">30 min</option><option value="45">45 min</option></select>
         </div>
       </div>
-      <a id="c_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
+      <a id="c_link" class="btn" href="#">Ouvrir dans Outlook</a>
     </div>
   </div>
 </div>
@@ -189,8 +189,8 @@ function updateAll() {
   const h2 = formatHeure(document.getElementById('p_heure2').value);
   const dur2 = formatDuree('p_h2', 'p_m2');
 
-  const pSujet = `Proposition de rendez-vous - ${pRef} - Dossier : ${pDossier}`;
-  const pCorps = `Madame, Monsieur,\n\nDans le cadre de votre dossier de recherche de fuite SOS FUITE D'EAU, référencé : ${pRef} - Dossier : ${pDossier}, nous vous proposons les créneaux suivants :\n\n• ${d1} à ${h1} (durée estimée : ${dur1})\nou\n• ${d2} à ${h2} (durée estimée : ${dur2})\n\nMerci de nous communiquer votre choix sous 48 heures. En cas de pluralité de personnes concernées, la date retenue sera celle recueillant la majorité des réponses favorables.\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence (ou celle de votre représentant) ainsi que l'accès aux locaux sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nÀ défaut de réponse dans le délai imparti, le syndic sera informé de l'absence de retour.\n\nCordialement,`;
+  const pSujet = `Proposition de rendez-vous - ${pRef} - Intervention : ${pDossier}`;
+  const pCorps = `Madame, Monsieur,\n\nDans le cadre de votre dossier de recherche de fuite SOS FUITE D'EAU, ${pDossier}, nous vous proposons les créneaux suivants :\n\n• ${d1} à ${h1} (durée estimée : ${dur1})\nou\n• ${d2} à ${h2} (durée estimée : ${dur2})\n\nMerci de nous communiquer votre choix sous 48 heures. En cas de pluralité de personnes concernées, la date retenue sera celle recueillant la majorité des réponses favorables.\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence (ou celle de votre représentant) ainsi que l'accès aux locaux sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nÀ défaut de réponse dans le délai imparti, le syndic sera informé de l'absence de retour.\n\nCordialement,`;
   document.getElementById('p_link').href = `mailto:${pEmails}?subject=${encodeURIComponent(pSujet)}&body=${encodeURIComponent(pCorps)}`;
 
   const cEmails = getEmails('c_emails');
@@ -200,8 +200,8 @@ function updateAll() {
   const cHeure = formatHeure(document.getElementById('c_heure').value);
   const cDuree = formatDuree('c_h', 'c_m');
 
-  const cSujet = `Confirmation de rendez-vous - ${cRef} - Dossier : ${cDossier}`;
-  const cCorps = `Madame, Monsieur,\n\nNous vous confirmons votre rendez-vous de recherche de fuite prévu le ${cDate} à ${cHeure}.\n\nVotre référence de dossier auprès de SOS FUITE D'EAU est la suivante ${cRef} - Dossier : ${cDossier}\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence ou celle d'un représentant ainsi que l'accès au logement sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nLa durée estimée de l'intervention est d'environ ${cDuree}.\n\nTout refus d'accès susceptible de retarder l'identification ou la résolution du sinistre pourra engager la responsabilité du propriétaire en cas de préjudice causé à la copropriété ou aux lots voisins.\n\nCordialement,`;
+  const cSujet = `Confirmation de rendez-vous - ${cRef} - Intervention : ${cDossier}`;
+  const cCorps = `Madame, Monsieur,\n\nNous vous confirmons votre rendez-vous de recherche de fuite prévu le ${cDate} à ${cHeure}.\n\nVotre référence de dossier auprès de SOS FUITE D'EAU est la suivante ${cDossier}\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence ou celle d'un représentant ainsi que l'accès au logement sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nLa durée estimée de l'intervention est d'environ ${cDuree}.\n\nTout refus d'accès susceptible de retarder l'identification ou la résolution du sinistre pourra engager la responsabilité du propriétaire en cas de préjudice causé à la copropriété ou aux lots voisins.\n\nCordialement,`;
   document.getElementById('c_link').href = `mailto:${cEmails}?subject=${encodeURIComponent(cSujet)}&body=${encodeURIComponent(cCorps)}`;
 }
 </script>
