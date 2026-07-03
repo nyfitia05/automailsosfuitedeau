@@ -10,8 +10,8 @@
   .wrap { width: 100%; max-width: 580px; }
   .logo { text-align: center; margin-bottom: 0.5rem; font-size: 13px; color: #888; letter-spacing: 0.05em; text-transform: uppercase; }
   h1 { font-size: 17px; font-weight: 600; color: #1a1a1a; margin-bottom: 1.5rem; text-align: center; }
-  .tabs { display: flex; gap: 8px; margin-bottom: 1.25rem; }
-  .tab { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; background: #fff; color: #666; font-size: 14px; cursor: pointer; text-align: center; font-family: Arial, sans-serif; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.25rem; }
+  .tab { flex: 1; min-width: calc(33% - 6px); padding: 9px 6px; border: 1px solid #ddd; border-radius: 8px; background: #fff; color: #666; font-size: 12px; cursor: pointer; text-align: center; font-family: Arial, sans-serif; }
   .tab.active { background: #003B6F; color: #fff; border-color: #003B6F; font-weight: 600; }
   .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.5rem; }
   .field { margin-bottom: 1rem; }
@@ -44,10 +44,14 @@
   <h1>Générateur d'e-mails RDV</h1>
 
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('proposition')">Proposition de RDV</button>
-    <button class="tab" onclick="switchTab('confirmation')">Confirmation de RDV</button>
+    <button class="tab active" onclick="switchTab('proposition')">Proposition RDV</button>
+    <button class="tab" onclick="switchTab('confirmation')">Confirmation RDV</button>
+    <button class="tab" onclick="switchTab('pec')">Prise en charge</button>
+    <button class="tab" onclick="switchTab('rapport')">Envoi rapport</button>
+    <button class="tab" onclick="switchTab('redirection')">Redirection</button>
   </div>
 
+  <!-- PROPOSITION -->
   <div id="proposition" class="section active">
     <div class="card">
       <div class="field">
@@ -56,6 +60,10 @@
           <div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div>
         </div>
         <button class="btn-add" onclick="ajouterEmail('p_emails')">+ Ajouter un destinataire</button>
+      </div>
+      <div class="field">
+        <label>En copie (CC)</label>
+        <input type="email" id="p_cc" placeholder="cc@exemple.fr" oninput="updateAll()">
       </div>
       <div class="row">
         <div class="field">
@@ -102,6 +110,7 @@
     </div>
   </div>
 
+  <!-- CONFIRMATION -->
   <div id="confirmation" class="section">
     <div class="card">
       <div class="field">
@@ -110,6 +119,10 @@
           <div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div>
         </div>
         <button class="btn-add" onclick="ajouterEmail('c_emails')">+ Ajouter un destinataire</button>
+      </div>
+      <div class="field">
+        <label>En copie (CC)</label>
+        <input type="email" id="c_cc" placeholder="cc@exemple.fr" oninput="updateAll()">
       </div>
       <div class="row">
         <div class="field">
@@ -134,14 +147,87 @@
           <select id="c_m" onchange="updateAll()"><option value="00" selected>00 min</option><option value="15">15 min</option><option value="30">30 min</option><option value="45">45 min</option></select>
         </div>
       </div>
-      <a id="c_link" class="btn" href="#">Ouvrir dans Outlook</a>
+      <a id="c_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
+    </div>
+  </div>
+
+  <!-- PRISE EN CHARGE -->
+  <div id="pec" class="section">
+    <div class="card">
+      <div class="field">
+        <label>Destinataires</label>
+        <div id="pec_emails">
+          <div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div>
+        </div>
+        <button class="btn-add" onclick="ajouterEmail('pec_emails')">+ Ajouter un destinataire</button>
+      </div>
+      <div class="field">
+        <label>En copie (CC)</label>
+        <input type="email" id="pec_cc" placeholder="cc@exemple.fr" oninput="updateAll()">
+      </div>
+      <div class="field">
+        <label>Objet du mail</label>
+        <input type="text" id="pec_sujet" placeholder="ex : RE: Ordre de mission DOMUS - Dossier Mr GLEIZER" oninput="updateAll()">
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>Notre référence</label>
+          <input type="text" id="pec_aquareport" placeholder="ex : 07534" oninput="updateAll()">
+        </div>
+        <div class="field">
+          <label>Votre référence (client)</label>
+          <input type="text" id="pec_ref_client" placeholder="ex : LY2607030551" oninput="updateAll()">
+        </div>
+      </div>
+      <a id="pec_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
+    </div>
+  </div>
+
+  <!-- ENVOI RAPPORT -->
+  <div id="rapport" class="section">
+    <div class="card">
+      <div class="field">
+        <label>Destinataires</label>
+        <div id="r_emails">
+          <div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div>
+        </div>
+        <button class="btn-add" onclick="ajouterEmail('r_emails')">+ Ajouter un destinataire</button>
+      </div>
+      <div class="field">
+        <label>En copie (CC)</label>
+        <input type="email" id="r_cc" placeholder="cc@exemple.fr" oninput="updateAll()">
+      </div>
+      <div class="field">
+        <label>Nom du destinataire</label>
+        <input type="text" id="r_nom" placeholder="ex : Dupont" oninput="updateAll()">
+      </div>
+      <a id="r_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
+    </div>
+  </div>
+
+  <!-- REDIRECTION -->
+  <div id="redirection" class="section">
+    <div class="card">
+      <div class="field">
+        <label>Destinataires</label>
+        <div id="red_emails">
+          <div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div>
+        </div>
+        <button class="btn-add" onclick="ajouterEmail('red_emails')">+ Ajouter un destinataire</button>
+      </div>
+      <div class="field">
+        <label>En copie (CC)</label>
+        <input type="email" id="red_cc" placeholder="cc@exemple.fr" oninput="updateAll()">
+      </div>
+      <a id="red_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
     </div>
   </div>
 </div>
 
 <script>
 function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', (tab==='proposition'&&i===0)||(tab==='confirmation'&&i===1)));
+  const tabs = ['proposition','confirmation','pec','rapport','redirection'];
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', tab === tabs[i]));
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(tab).classList.add('active');
 }
@@ -178,8 +264,15 @@ function formatDuree(hId, mId) {
   return `${h}h${m}`;
 }
 
+function buildMailto(to, cc, sujet, corps) {
+  const ccParam = cc ? `&cc=${encodeURIComponent(cc)}` : '';
+  return `mailto:${to}?subject=${encodeURIComponent(sujet)}${ccParam}&body=${encodeURIComponent(corps)}`;
+}
+
 function updateAll() {
+  // PROPOSITION
   const pEmails = getEmails('p_emails');
+  const pCc = document.getElementById('p_cc').value;
   const pRef = document.getElementById('p_ref').value || 'RefXXX';
   const pDossier = document.getElementById('p_dossier').value || 'XXXX';
   const d1 = formatDate(document.getElementById('p_date1').value);
@@ -188,21 +281,45 @@ function updateAll() {
   const d2 = formatDate(document.getElementById('p_date2').value);
   const h2 = formatHeure(document.getElementById('p_heure2').value);
   const dur2 = formatDuree('p_h2', 'p_m2');
-
   const pSujet = `Proposition de rendez-vous - ${pRef} - Intervention : ${pDossier}`;
   const pCorps = `Madame, Monsieur,\n\nDans le cadre de votre dossier de recherche de fuite SOS FUITE D'EAU, ${pDossier}, nous vous proposons les créneaux suivants :\n\n• ${d1} à ${h1} (durée estimée : ${dur1})\nou\n• ${d2} à ${h2} (durée estimée : ${dur2})\n\nMerci de nous communiquer votre choix sous 48 heures. En cas de pluralité de personnes concernées, la date retenue sera celle recueillant la majorité des réponses favorables.\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence (ou celle de votre représentant) ainsi que l'accès aux locaux sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nÀ défaut de réponse dans le délai imparti, le syndic sera informé de l'absence de retour.\n\nCordialement,`;
-  document.getElementById('p_link').href = `mailto:${pEmails}?subject=${encodeURIComponent(pSujet)}&body=${encodeURIComponent(pCorps)}`;
+  document.getElementById('p_link').href = buildMailto(pEmails, pCc, pSujet, pCorps);
 
+  // CONFIRMATION
   const cEmails = getEmails('c_emails');
+  const cCc = document.getElementById('c_cc').value;
   const cRef = document.getElementById('c_ref').value || 'RefXXX';
   const cDossier = document.getElementById('c_dossier').value || 'XXXX';
   const cDate = formatDate(document.getElementById('c_date').value);
   const cHeure = formatHeure(document.getElementById('c_heure').value);
   const cDuree = formatDuree('c_h', 'c_m');
-
   const cSujet = `Confirmation de rendez-vous - ${cRef} - Intervention : ${cDossier}`;
   const cCorps = `Madame, Monsieur,\n\nNous vous confirmons votre rendez-vous de recherche de fuite prévu le ${cDate} à ${cHeure}.\n\nVotre référence de dossier auprès de SOS FUITE D'EAU est la suivante ${cDossier}\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence ou celle d'un représentant ainsi que l'accès au logement sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nLa durée estimée de l'intervention est d'environ ${cDuree}.\n\nTout refus d'accès susceptible de retarder l'identification ou la résolution du sinistre pourra engager la responsabilité du propriétaire en cas de préjudice causé à la copropriété ou aux lots voisins.\n\nCordialement,`;
-  document.getElementById('c_link').href = `mailto:${cEmails}?subject=${encodeURIComponent(cSujet)}&body=${encodeURIComponent(cCorps)}`;
+  document.getElementById('c_link').href = buildMailto(cEmails, cCc, cSujet, cCorps);
+
+  // PRISE EN CHARGE
+  const pecEmails = getEmails('pec_emails');
+  const pecCc = document.getElementById('pec_cc').value;
+  const pecAquareport = document.getElementById('pec_aquareport').value || 'XXXXXXXXX';
+  const pecRefClient = document.getElementById('pec_ref_client').value || 'XXXXXXXXX';
+  const pecSujet = document.getElementById('pec_sujet').value || `Prise en charge Recherche fuites d'eau`;
+  const pecCorps = `Madame, Monsieur,\n\nNous vous confirmons la bonne prise en charge de votre demande de recherche de fuite.\n\nNotre référence : ${pecAquareport}\n\nVotre référence : ${pecRefClient}\n\nNous restons à votre disposition pour toute information complémentaire.\n\nCordialement,`;
+  document.getElementById('pec_link').href = buildMailto(pecEmails, pecCc, pecSujet, pecCorps);
+
+  // ENVOI RAPPORT
+  const rEmails = getEmails('r_emails');
+  const rCc = document.getElementById('r_cc').value;
+  const rNom = document.getElementById('r_nom').value || '......';
+  const rSujet = `Réponse demande d'envoi de rapport`;
+  const rCorps = `Bonjour ${rNom},\n\nLe rapport d'intervention est adressé exclusivement au mandataire ayant commandé la prestation (syndic, assurance, expert ou gestionnaire), qui reste seul habilité à le communiquer aux personnes concernées.\n\nNous vous invitons donc à vous rapprocher de votre syndic ou assurance afin d'obtenir ce document.\n\nCordialement,`;
+  document.getElementById('r_link').href = buildMailto(rEmails, rCc, rSujet, rCorps);
+
+  // REDIRECTION
+  const redEmails = getEmails('red_emails');
+  const redCc = document.getElementById('red_cc').value;
+  const redSujet = `Information - Gestion de votre demande`;
+  const redCorps = `Bonjour,\n\nPour une meilleure gestion, nos boites mails « opérateur » gèrent uniquement les organisations des interventions et les prises de rendez-vous.\nPour toute demande d'intervention, de devis, de rapport ou autre, merci d'adresser vos mails à contact@sosfuitedeau.com.\nVous remerciant de votre compréhension.\n\nBien cordialement,`;
+  document.getElementById('red_link').href = buildMailto(redEmails, redCc, redSujet, redCorps);
 }
 </script>
 </body>
