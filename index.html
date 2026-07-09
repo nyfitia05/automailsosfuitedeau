@@ -6,12 +6,12 @@
 <title>SOS Fuite d'Eau — Générateur d'e-mails</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: Arial, sans-serif; background: #f5f5f5; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem; }
-  .wrap { width: 100%; max-width: 580px; }
+  body { font-family: Arial, sans-serif; background: #f5f5f5; min-height: 100vh; padding: 2rem 1rem; display: block; }
+  .wrap { width: 100%; max-width: 580px; margin: 0 auto; }
   .logo { text-align: center; margin-bottom: 0.5rem; font-size: 13px; color: #888; letter-spacing: 0.05em; text-transform: uppercase; }
   h1 { font-size: 17px; font-weight: 600; color: #1a1a1a; margin-bottom: 1.5rem; text-align: center; }
-  .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.25rem; }
-  .tab { flex: 1; min-width: calc(33% - 6px); padding: 9px 6px; border: 1px solid #ddd; border-radius: 8px; background: #fff; color: #666; font-size: 12px; cursor: pointer; text-align: center; font-family: Arial, sans-serif; }
+  .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1.25rem; clear: both; width: 100%; }
+  .tab { padding: 9px 6px; border: 1px solid #ddd; border-radius: 8px; background: #fff; color: #666; font-size: 12px; cursor: pointer; text-align: center; font-family: Arial, sans-serif; }
   .tab.active { background: #003B6F; color: #fff; border-color: #003B6F; font-weight: 600; }
   .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.5rem; }
   .field { margin-bottom: 1rem; }
@@ -49,6 +49,10 @@
     <button class="tab" onclick="switchTab('pec')">Prise en charge</button>
     <button class="tab" onclick="switchTab('rapport')">Envoi rapport</button>
     <button class="tab" onclick="switchTab('redirection')">Redirection</button>
+    <button class="tab" onclick="switchTab('devis')">Devis</button>
+    <button class="tab" onclick="switchTab('suivi')">Suivi dossier</button>
+    <span></span>
+    <span></span>
   </div>
 
   <!-- PROPOSITION -->
@@ -56,24 +60,17 @@
     <div class="card">
       <div class="field">
         <label>Destinataires</label>
-        <div id="p_emails">
-          <div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div>
-        </div>
+        <div id="p_emails"><div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div></div>
         <button class="btn-add" onclick="ajouterEmail('p_emails')">+ Ajouter un destinataire</button>
       </div>
       <div class="field">
         <label>En copie (CC)</label>
-        <input type="email" id="p_cc" placeholder="cc@exemple.fr" oninput="updateAll()">
+        <div id="p_cc"><div class="email-row"><input type="email" placeholder="cc@exemple.fr" oninput="updateAll()"></div></div>
+        <button class="btn-add" onclick="ajouterEmail('p_cc')">+ Ajouter un CC</button>
       </div>
       <div class="row">
-        <div class="field">
-          <label>Référence (Ref)</label>
-          <input type="text" id="p_ref" placeholder="ex : REF7412" oninput="updateAll()">
-        </div>
-        <div class="field">
-          <label>Numéro d'intervention</label>
-          <input type="text" id="p_dossier" placeholder="ex : 8621" oninput="updateAll()">
-        </div>
+        <div class="field"><label>Référence (Ref)</label><input type="text" id="p_ref" placeholder="ex : REF7412" oninput="updateAll()"></div>
+        <div class="field"><label>Numéro d'intervention</label><input type="text" id="p_dossier" placeholder="ex : 8621" oninput="updateAll()"></div>
       </div>
       <div class="divider"></div>
       <div class="bloc">
@@ -82,8 +79,7 @@
           <div class="field" style="margin:0"><label>Date</label><input type="date" id="p_date1" oninput="updateAll()"></div>
           <div class="field" style="margin:0"><label>Heure</label><input type="time" id="p_heure1" oninput="updateAll()"></div>
         </div>
-        <div class="field" style="margin:0">
-          <label>Durée estimée</label>
+        <div class="field" style="margin:0"><label>Durée estimée</label>
           <div class="duree-wrap">
             <select id="p_h1" onchange="updateAll()"><option value="0">0h</option><option value="1" selected>1h</option><option value="2">2h</option><option value="3">3h</option><option value="4">4h</option><option value="5">5h</option><option value="6">6h</option></select>
             <span class="duree-sep">heures</span>
@@ -97,8 +93,7 @@
           <div class="field" style="margin:0"><label>Date</label><input type="date" id="p_date2" oninput="updateAll()"></div>
           <div class="field" style="margin:0"><label>Heure</label><input type="time" id="p_heure2" oninput="updateAll()"></div>
         </div>
-        <div class="field" style="margin:0">
-          <label>Durée estimée</label>
+        <div class="field" style="margin:0"><label>Durée estimée</label>
           <div class="duree-wrap">
             <select id="p_h2" onchange="updateAll()"><option value="0">0h</option><option value="1" selected>1h</option><option value="2">2h</option><option value="3">3h</option><option value="4">4h</option><option value="5">5h</option><option value="6">6h</option></select>
             <span class="duree-sep">heures</span>
@@ -115,32 +110,24 @@
     <div class="card">
       <div class="field">
         <label>Destinataires</label>
-        <div id="c_emails">
-          <div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div>
-        </div>
+        <div id="c_emails"><div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div></div>
         <button class="btn-add" onclick="ajouterEmail('c_emails')">+ Ajouter un destinataire</button>
       </div>
       <div class="field">
         <label>En copie (CC)</label>
-        <input type="email" id="c_cc" placeholder="cc@exemple.fr" oninput="updateAll()">
+        <div id="c_cc"><div class="email-row"><input type="email" placeholder="cc@exemple.fr" oninput="updateAll()"></div></div>
+        <button class="btn-add" onclick="ajouterEmail('c_cc')">+ Ajouter un CC</button>
       </div>
       <div class="row">
-        <div class="field">
-          <label>Référence (Ref)</label>
-          <input type="text" id="c_ref" placeholder="ex : REF7412" oninput="updateAll()">
-        </div>
-        <div class="field">
-          <label>Numéro d'intervention</label>
-          <input type="text" id="c_dossier" placeholder="ex : 8621" oninput="updateAll()">
-        </div>
+        <div class="field"><label>Référence (Ref)</label><input type="text" id="c_ref" placeholder="ex : REF7412" oninput="updateAll()"></div>
+        <div class="field"><label>Numéro d'intervention</label><input type="text" id="c_dossier" placeholder="ex : 8621" oninput="updateAll()"></div>
       </div>
       <div class="divider"></div>
       <div class="row">
         <div class="field"><label>Date du RDV</label><input type="date" id="c_date" oninput="updateAll()"></div>
         <div class="field"><label>Heure du RDV</label><input type="time" id="c_heure" oninput="updateAll()"></div>
       </div>
-      <div class="field">
-        <label>Durée estimée</label>
+      <div class="field"><label>Durée estimée</label>
         <div class="duree-wrap">
           <select id="c_h" onchange="updateAll()"><option value="0">0h</option><option value="1" selected>1h</option><option value="2">2h</option><option value="3">3h</option><option value="4">4h</option><option value="5">5h</option><option value="6">6h</option></select>
           <span class="duree-sep">heures</span>
@@ -156,28 +143,18 @@
     <div class="card">
       <div class="field">
         <label>Destinataires</label>
-        <div id="pec_emails">
-          <div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div>
-        </div>
+        <div id="pec_emails"><div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div></div>
         <button class="btn-add" onclick="ajouterEmail('pec_emails')">+ Ajouter un destinataire</button>
       </div>
       <div class="field">
         <label>En copie (CC)</label>
-        <input type="email" id="pec_cc" placeholder="cc@exemple.fr" oninput="updateAll()">
+        <div id="pec_cc"><div class="email-row"><input type="email" placeholder="cc@exemple.fr" oninput="updateAll()"></div></div>
+        <button class="btn-add" onclick="ajouterEmail('pec_cc')">+ Ajouter un CC</button>
       </div>
-      <div class="field">
-        <label>Objet du mail</label>
-        <input type="text" id="pec_sujet" placeholder="ex : RE: Ordre de mission DOMUS - Dossier Mr GLEIZER" oninput="updateAll()">
-      </div>
+      <div class="field"><label>Objet du mail</label><input type="text" id="pec_sujet" placeholder="ex : RE: Ordre de mission DOMUS - Dossier Mr GLEIZER" oninput="updateAll()"></div>
       <div class="row">
-        <div class="field">
-          <label>Notre référence</label>
-          <input type="text" id="pec_aquareport" placeholder="ex : 07534" oninput="updateAll()">
-        </div>
-        <div class="field">
-          <label>Votre référence (client)</label>
-          <input type="text" id="pec_ref_client" placeholder="ex : LY2607030551" oninput="updateAll()">
-        </div>
+        <div class="field"><label>Notre référence</label><input type="text" id="pec_aquareport" placeholder="ex : 07534" oninput="updateAll()"></div>
+        <div class="field"><label>Votre référence (client)</label><input type="text" id="pec_ref_client" placeholder="ex : LY2607030551" oninput="updateAll()"></div>
       </div>
       <a id="pec_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
     </div>
@@ -188,19 +165,15 @@
     <div class="card">
       <div class="field">
         <label>Destinataires</label>
-        <div id="r_emails">
-          <div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div>
-        </div>
+        <div id="r_emails"><div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div></div>
         <button class="btn-add" onclick="ajouterEmail('r_emails')">+ Ajouter un destinataire</button>
       </div>
       <div class="field">
         <label>En copie (CC)</label>
-        <input type="email" id="r_cc" placeholder="cc@exemple.fr" oninput="updateAll()">
+        <div id="r_cc"><div class="email-row"><input type="email" placeholder="cc@exemple.fr" oninput="updateAll()"></div></div>
+        <button class="btn-add" onclick="ajouterEmail('r_cc')">+ Ajouter un CC</button>
       </div>
-      <div class="field">
-        <label>Nom du destinataire</label>
-        <input type="text" id="r_nom" placeholder="ex : Dupont" oninput="updateAll()">
-      </div>
+      <div class="field"><label>Nom du destinataire</label><input type="text" id="r_nom" placeholder="ex : Dupont" oninput="updateAll()"></div>
       <a id="r_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
     </div>
   </div>
@@ -210,23 +183,63 @@
     <div class="card">
       <div class="field">
         <label>Destinataires</label>
-        <div id="red_emails">
-          <div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div>
-        </div>
+        <div id="red_emails"><div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div></div>
         <button class="btn-add" onclick="ajouterEmail('red_emails')">+ Ajouter un destinataire</button>
       </div>
       <div class="field">
         <label>En copie (CC)</label>
-        <input type="email" id="red_cc" placeholder="cc@exemple.fr" oninput="updateAll()">
+        <div id="red_cc"><div class="email-row"><input type="email" placeholder="cc@exemple.fr" oninput="updateAll()"></div></div>
+        <button class="btn-add" onclick="ajouterEmail('red_cc')">+ Ajouter un CC</button>
       </div>
       <a id="red_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
+    </div>
+  </div>
+
+  <!-- DEVIS -->
+  <div id="devis" class="section">
+    <div class="card">
+      <div class="field">
+        <label>Destinataires</label>
+        <div id="dev_emails"><div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div></div>
+        <button class="btn-add" onclick="ajouterEmail('dev_emails')">+ Ajouter un destinataire</button>
+      </div>
+      <div class="field">
+        <label>En copie (CC)</label>
+        <div id="dev_cc"><div class="email-row"><input type="email" placeholder="cc@exemple.fr" oninput="updateAll()"></div></div>
+        <button class="btn-add" onclick="ajouterEmail('dev_cc')">+ Ajouter un CC</button>
+      </div>
+      <div class="row">
+        <div class="field"><label>Date</label><input type="date" id="dev_date" oninput="updateAll()"></div>
+        <div class="field"><label>Heure</label><input type="time" id="dev_heure" oninput="updateAll()"></div>
+      </div>
+      <div class="field"><label>Lieu</label><input type="text" id="dev_lieu" placeholder="ex : 12 rue des Fleurs, Nice" oninput="updateAll()"></div>
+      <a id="dev_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
+    </div>
+  </div>
+
+  <!-- SUIVI DOSSIER -->
+  <div id="suivi" class="section">
+    <div class="card">
+      <div class="field">
+        <label>Destinataires</label>
+        <div id="s_emails"><div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div></div>
+        <button class="btn-add" onclick="ajouterEmail('s_emails')">+ Ajouter un destinataire</button>
+      </div>
+      <div class="field">
+        <label>En copie (CC)</label>
+        <div id="s_cc"><div class="email-row"><input type="email" placeholder="cc@exemple.fr" oninput="updateAll()"></div></div>
+        <button class="btn-add" onclick="ajouterEmail('s_cc')">+ Ajouter un CC</button>
+      </div>
+      <div class="field"><label>Référence dossier</label><input type="text" id="s_ref" placeholder="ex : REF7412" oninput="updateAll()"></div>
+      <div class="field"><label>Motif</label><input type="text" id="s_motif" placeholder="ex : attente de disponibilité" oninput="updateAll()"></div>
+      <a id="s_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
     </div>
   </div>
 </div>
 
 <script>
 function switchTab(tab) {
-  const tabs = ['proposition','confirmation','pec','rapport','redirection'];
+  const tabs = ['proposition','confirmation','pec','rapport','redirection','devis','suivi'];
   document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', tab === tabs[i]));
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(tab).classList.add('active');
@@ -236,7 +249,7 @@ function ajouterEmail(containerId) {
   const container = document.getElementById(containerId);
   const row = document.createElement('div');
   row.className = 'email-row';
-  row.innerHTML = `<input type="email" placeholder="client@exemple.fr" oninput="updateAll()"><button class="btn-remove" onclick="this.parentElement.remove(); updateAll()">×</button>`;
+  row.innerHTML = `<input type="email" placeholder="email@exemple.fr" oninput="updateAll()"><button class="btn-remove" onclick="this.parentElement.remove(); updateAll()">×</button>`;
   container.appendChild(row);
 }
 
@@ -272,7 +285,7 @@ function buildMailto(to, cc, sujet, corps) {
 function updateAll() {
   // PROPOSITION
   const pEmails = getEmails('p_emails');
-  const pCc = document.getElementById('p_cc').value;
+  const pCc = getEmails('p_cc');
   const pRef = document.getElementById('p_ref').value || 'RefXXX';
   const pDossier = document.getElementById('p_dossier').value || 'XXXX';
   const d1 = formatDate(document.getElementById('p_date1').value);
@@ -287,7 +300,7 @@ function updateAll() {
 
   // CONFIRMATION
   const cEmails = getEmails('c_emails');
-  const cCc = document.getElementById('c_cc').value;
+  const cCc = getEmails('c_cc');
   const cRef = document.getElementById('c_ref').value || 'RefXXX';
   const cDossier = document.getElementById('c_dossier').value || 'XXXX';
   const cDate = formatDate(document.getElementById('c_date').value);
@@ -299,7 +312,7 @@ function updateAll() {
 
   // PRISE EN CHARGE
   const pecEmails = getEmails('pec_emails');
-  const pecCc = document.getElementById('pec_cc').value;
+  const pecCc = getEmails('pec_cc');
   const pecAquareport = document.getElementById('pec_aquareport').value || 'XXXXXXXXX';
   const pecRefClient = document.getElementById('pec_ref_client').value || 'XXXXXXXXX';
   const pecSujet = document.getElementById('pec_sujet').value || `Prise en charge Recherche fuites d'eau`;
@@ -308,7 +321,7 @@ function updateAll() {
 
   // ENVOI RAPPORT
   const rEmails = getEmails('r_emails');
-  const rCc = document.getElementById('r_cc').value;
+  const rCc = getEmails('r_cc');
   const rNom = document.getElementById('r_nom').value || '......';
   const rSujet = `Réponse demande d'envoi de rapport`;
   const rCorps = `Bonjour ${rNom},\n\nLe rapport d'intervention est adressé exclusivement au mandataire ayant commandé la prestation (syndic, assurance, expert ou gestionnaire), qui reste seul habilité à le communiquer aux personnes concernées.\n\nNous vous invitons donc à vous rapprocher de votre syndic ou assurance afin d'obtenir ce document.\n\nCordialement,`;
@@ -316,10 +329,29 @@ function updateAll() {
 
   // REDIRECTION
   const redEmails = getEmails('red_emails');
-  const redCc = document.getElementById('red_cc').value;
+  const redCc = getEmails('red_cc');
   const redSujet = `Information - Gestion de votre demande`;
   const redCorps = `Bonjour,\n\nPour une meilleure gestion, nos boites mails « opérateur » gèrent uniquement les organisations des interventions et les prises de rendez-vous.\nPour toute demande d'intervention, de devis, de rapport ou autre, merci d'adresser vos mails à contact@sosfuitedeau.com.\nVous remerciant de votre compréhension.\n\nBien cordialement,`;
   document.getElementById('red_link').href = buildMailto(redEmails, redCc, redSujet, redCorps);
+
+  // DEVIS
+  const devEmails = getEmails('dev_emails');
+  const devCc = getEmails('dev_cc');
+  const devDate = formatDate(document.getElementById('dev_date').value);
+  const devHeure = formatHeure(document.getElementById('dev_heure').value);
+  const devLieu = document.getElementById('dev_lieu').value || '___';
+  const devSujet = `Confirmation de rendez-vous pour une visite préalable à l'établissement d'un devis`;
+  const devCorps = `Madame, Monsieur,\n\nNous vous confirmons le rendez-vous avec l'un de nos techniciens afin de réaliser une visite préalable à l'établissement du devis nécessaire à la réalisation de la prestation.\n\nDate : ${devDate}\nHeure : ${devHeure}\nLieu : ${devLieu}\n\nNous vous remercions de prendre les dispositions nécessaires afin de permettre l'accès au technicien et de rendre les zones concernées accessibles le jour de l'intervention.\n\nÀ l'issue de cette visite, un devis vous sera établi.\n\nCordialement,`;
+  document.getElementById('dev_link').href = buildMailto(devEmails, devCc, devSujet, devCorps);
+
+  // SUIVI DOSSIER
+  const sEmails = getEmails('s_emails');
+  const sCc = getEmails('s_cc');
+  const sRef = document.getElementById('s_ref').value || '[Référence dossier]';
+  const sMotif = document.getElementById('s_motif').value || '[motif]';
+  const sSujet = `Suivi de votre demande d'intervention n° ${sRef}`;
+  const sCorps = `Madame, Monsieur,\n\nNous faisons suite à votre demande d'intervention concernant le dossier référencé ci-dessus.\n\nÀ ce jour, l'intervention n'a pas encore pu être planifiée en raison de ${sMotif}.\n\nNous vous confirmons que le dossier fait l'objet d'un suivi quotidien par nos équipes et que tout est mis en œuvre afin de programmer l'intervention dans les meilleurs délais.\n\nNous ne manquerons pas de vous informer dès que le rendez-vous sera fixé ou si des éléments complémentaires devaient être nécessaires.\n\nNous vous remercions de votre compréhension et restons à votre disposition pour tout renseignement complémentaire.\n\nCordialement,`;
+  document.getElementById('s_link').href = buildMailto(sEmails, sCc, sSujet, sCorps);
 }
 </script>
 </body>
