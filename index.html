@@ -327,12 +327,33 @@ function updateAll() {
   const rCorps = `Bonjour ${rNom},\n\nLe rapport d'intervention est adressé exclusivement au mandataire ayant commandé la prestation (syndic, assurance, expert ou gestionnaire), qui reste seul habilité à le communiquer aux personnes concernées.\n\nNous vous invitons donc à vous rapprocher de votre syndic ou assurance afin d'obtenir ce document.\n\nCordialement,`;
   document.getElementById('r_link').href = buildMailto(rEmails, rCc, rSujet, rCorps);
 
-  // REDIRECTION
-  const redEmails = getEmails('red_emails');
-  const redCc = getEmails('red_cc');
-  const redSujet = `Information - Gestion de votre demande`;
-  const redCorps = `Bonjour,\n\nPour une meilleure gestion, nos boites mails « opérateur » gèrent uniquement les organisations des interventions et les prises de rendez-vous.\nPour toute demande d'intervention, de devis, de rapport ou autre, merci d'adresser vos mails à contact@sosfuitedeau.com.\nVous remerciant de votre compréhension.\n\nBien cordialement,`;
-  document.getElementById('red_link').href = buildMailto(redEmails, redCc, redSujet, redCorps);
+// REDIRECTION
+
+const redEmails = getEmails('red_emails');
+const redCc = getEmails('red_cc');
+
+const redSujet = `Information - Gestion de votre demande`;
+
+const redCorps = `Bonjour,
+
+Afin d’assurer un traitement rapide de vos demandes, nous vous remercions de bien vouloir adresser toute demande d’intervention, de devis, de rapport ou toute autre demande administrative à contact@sosfuitedeau.com.
+
+Notre plateau technique centralise l’ensemble des demandes et assure leur traitement, leur suivi ainsi que la planification des interventions.
+
+Nos boites mails « opérateur » gèrent uniquement les organisations des interventions et les prises de rendez-vous.
+
+Nos techniciens sont exclusivement dédiés aux interventions sur le terrain et ne sont pas en mesure de gérer les demandes administratives ou les prises de rendez-vous.
+
+Nous vous remercions de votre compréhension et de votre collaboration.
+
+Bien cordialement,`;
+
+document.getElementById('red_link').href = buildMailto(
+  redEmails,
+  redCc,
+  redSujet,
+  redCorps
+);
 
   // DEVIS
   const devEmails = getEmails('dev_emails');
