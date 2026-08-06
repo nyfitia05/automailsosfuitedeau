@@ -394,7 +394,7 @@ document.getElementById('red_link').href = buildMailto(
   // PROPOSITION PLOMBERIE
   const plbEmails = getEmails('plb_emails');
   const plbCc = getEmails('plb_cc');
-  const plbSujet = `Proposition plomberie`;
+  const plbSujet = `Suite à notre intervention`;
   const plbCorps = `Bonjour,\n\nNous faisons suite à notre intervention de recherche de fuite du rapport ci-joint .\n\nNotre département plomberie peut vous transmettre un devis si vous le souhaiter.\n\nDans l'attente de votre retour.\n\nCordialement,`;
   document.getElementById('plb_link').href = buildMailto(plbEmails, plbCc, plbSujet, plbCorps);
 }
