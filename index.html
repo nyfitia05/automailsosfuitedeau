@@ -11,6 +11,8 @@
   .logo { text-align: center; margin-bottom: 0.5rem; font-size: 13px; color: #888; letter-spacing: 0.05em; text-transform: uppercase; }
   h1 { font-size: 17px; font-weight: 600; color: #1a1a1a; margin-bottom: 1.5rem; text-align: center; }
   .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1.25rem; clear: both; width: 100%; }
+  .field input[type="file"] { padding: 7px 8px; }
+  .hint { font-size: 11px; color: #888; margin-top: 5px; line-height: 1.4; }
   .tab { padding: 9px 6px; border: 1px solid #ddd; border-radius: 8px; background: #fff; color: #666; font-size: 12px; cursor: pointer; text-align: center; font-family: Arial, sans-serif; }
   .tab.active { background: #003B6F; color: #fff; border-color: #003B6F; font-weight: 600; }
   .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.5rem; }
@@ -51,7 +53,7 @@
     <button class="tab" onclick="switchTab('redirection')">Redirection</button>
     <button class="tab" onclick="switchTab('devis')">Devis</button>
     <button class="tab" onclick="switchTab('suivi')">Suivi dossier</button>
-    <span></span>
+    <button class="tab" onclick="switchTab('plomberie')">Proposition plomberie</button>
     <span></span>
   </div>
 
@@ -235,11 +237,33 @@
       <a id="s_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
     </div>
   </div>
+
+  <!-- PROPOSITION PLOMBERIE -->
+  <div id="plomberie" class="section">
+    <div class="card">
+      <div class="field">
+        <label>Destinataires</label>
+        <div id="plb_emails"><div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div></div>
+        <button class="btn-add" onclick="ajouterEmail('plb_emails')">+ Ajouter un destinataire</button>
+      </div>
+      <div class="field">
+        <label>En copie (CC)</label>
+        <div id="plb_cc"><div class="email-row"><input type="email" placeholder="cc@exemple.fr" oninput="updateAll()"></div></div>
+        <button class="btn-add" onclick="ajouterEmail('plb_cc')">+ Ajouter un CC</button>
+      </div>
+      <div class="field">
+        <label>Pièce jointe (rapport)</label>
+        <input type="file" id="plb_piece" onchange="updateAll()">
+        <div class="hint">⚠️ Un lien mailto ne permet pas de joindre un fichier automatiquement. Une fois Outlook ouvert, pensez à joindre le fichier sélectionné avant l'envoi.</div>
+      </div>
+      <a id="plb_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
+    </div>
+  </div>
 </div>
 
 <script>
 function switchTab(tab) {
-  const tabs = ['proposition','confirmation','pec','rapport','redirection','devis','suivi'];
+  const tabs = ['proposition','confirmation','pec','rapport','redirection','devis','suivi','plomberie'];
   document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', tab === tabs[i]));
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(tab).classList.add('active');
@@ -373,6 +397,13 @@ document.getElementById('red_link').href = buildMailto(
   const sSujet = `Suivi de votre demande d'intervention n° ${sRef}`;
   const sCorps = `Madame, Monsieur,\n\nNous faisons suite à votre demande d'intervention concernant le dossier référencé ci-dessus.\n\nÀ ce jour, l'intervention n'a pas encore pu être planifiée en raison de ${sMotif}.\n\nNous vous confirmons que le dossier fait l'objet d'un suivi quotidien par nos équipes et que tout est mis en œuvre afin de programmer l'intervention dans les meilleurs délais.\n\nNous ne manquerons pas de vous informer dès que le rendez-vous sera fixé ou si des éléments complémentaires devaient être nécessaires.\n\nNous vous remercions de votre compréhension et restons à votre disposition pour tout renseignement complémentaire.\n\nCordialement,`;
   document.getElementById('s_link').href = buildMailto(sEmails, sCc, sSujet, sCorps);
+
+  // PROPOSITION PLOMBERIE
+  const plbEmails = getEmails('plb_emails');
+  const plbCc = getEmails('plb_cc');
+  const plbSujet = `Proposition plomberie`;
+  const plbCorps = `Bonjour,\n\nNous faisons suite à notre intervention de recherche de fuite du rapport ci-joint .\n\nNotre département plomberie peut vous transmettre un devis si vous le souhaiter.\n\nDans l'attente de votre retour.\n\nCordialement,`;
+  document.getElementById('plb_link').href = buildMailto(plbEmails, plbCc, plbSujet, plbCorps);
 }
 </script>
 </body>
