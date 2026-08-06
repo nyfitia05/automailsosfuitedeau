@@ -11,8 +11,6 @@
   .logo { text-align: center; margin-bottom: 0.5rem; font-size: 13px; color: #888; letter-spacing: 0.05em; text-transform: uppercase; }
   h1 { font-size: 17px; font-weight: 600; color: #1a1a1a; margin-bottom: 1.5rem; text-align: center; }
   .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1.25rem; clear: both; width: 100%; }
-  .field input[type="file"] { padding: 7px 8px; }
-  .hint { font-size: 11px; color: #888; margin-top: 5px; line-height: 1.4; }
   .tab { padding: 9px 6px; border: 1px solid #ddd; border-radius: 8px; background: #fff; color: #666; font-size: 12px; cursor: pointer; text-align: center; font-family: Arial, sans-serif; }
   .tab.active { background: #003B6F; color: #fff; border-color: #003B6F; font-weight: 600; }
   .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.5rem; }
@@ -250,11 +248,6 @@
         <label>En copie (CC)</label>
         <div id="plb_cc"><div class="email-row"><input type="email" placeholder="cc@exemple.fr" oninput="updateAll()"></div></div>
         <button class="btn-add" onclick="ajouterEmail('plb_cc')">+ Ajouter un CC</button>
-      </div>
-      <div class="field">
-        <label>Pièce jointe (rapport)</label>
-        <input type="file" id="plb_piece" onchange="updateAll()">
-        <div class="hint">⚠️ Un lien mailto ne permet pas de joindre un fichier automatiquement. Une fois Outlook ouvert, pensez à joindre le fichier sélectionné avant l'envoi.</div>
       </div>
       <a id="plb_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
     </div>
