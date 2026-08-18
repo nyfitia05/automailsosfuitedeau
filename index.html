@@ -51,7 +51,7 @@
     <button class="tab" onclick="switchTab('redirection')">Redirection</button>
     <button class="tab" onclick="switchTab('devis')">Devis</button>
     <button class="tab" onclick="switchTab('suivi')">Suivi dossier</button>
-    <button class="tab" onclick="switchTab('plomberie')">Proposition plomberie</button>
+    <span></span>
     <span></span>
   </div>
 
@@ -194,6 +194,7 @@
       <a id="red_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
     </div>
   </div>
+</div>
 
   <!-- DEVIS -->
   <div id="devis" class="section">
@@ -236,27 +237,10 @@
     </div>
   </div>
 
-  <!-- PROPOSITION PLOMBERIE -->
-  <div id="plomberie" class="section">
-    <div class="card">
-      <div class="field">
-        <label>Destinataires</label>
-        <div id="plb_emails"><div class="email-row"><input type="email" placeholder="client@exemple.fr" oninput="updateAll()"></div></div>
-        <button class="btn-add" onclick="ajouterEmail('plb_emails')">+ Ajouter un destinataire</button>
-      </div>
-      <div class="field">
-        <label>En copie (CC)</label>
-        <div id="plb_cc"><div class="email-row"><input type="email" placeholder="cc@exemple.fr" oninput="updateAll()"></div></div>
-        <button class="btn-add" onclick="ajouterEmail('plb_cc')">+ Ajouter un CC</button>
-      </div>
-      <a id="plb_link" class="btn" href="#">✉ Ouvrir dans Outlook</a>
-    </div>
-  </div>
-</div>
 
 <script>
 function switchTab(tab) {
-  const tabs = ['proposition','confirmation','pec','rapport','redirection','devis','suivi','plomberie'];
+  const tabs = ['proposition','confirmation','pec','rapport','redirection','devis','suivi'];
   document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', tab === tabs[i]));
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(tab).classList.add('active');
@@ -324,7 +308,7 @@ function updateAll() {
   const cHeure = formatHeure(document.getElementById('c_heure').value);
   const cDuree = formatDuree('c_h', 'c_m');
   const cSujet = `Confirmation de rendez-vous - ${cRef} - Intervention : ${cDossier}`;
-  const cCorps = `Madame, Monsieur,\n\nNous vous confirmons votre rendez-vous de recherche de fuite prévu le ${cDate} à ${cHeure}.\n\nVotre référence de dossier auprès de SOS FUITE D'EAU est la suivante ${cDossier}\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence ou celle d'un représentant ainsi que l'accès au logement sont indispensables à la réalisation de cette intervention.\n\nLa durée estimée de l'intervention est d'environ ${cDuree}.\n\nTout refus d'accès susceptible de retarder l'identification ou la résolution du sinistre pourra engager la responsabilité du propriétaire en cas de préjudice causé à la copropriété ou aux lots voisins.\n\nCordialement,`;
+  const cCorps = `Madame, Monsieur,\n\nNous vous confirmons votre rendez-vous de recherche de fuite prévu le ${cDate} à ${cHeure}.\n\nVotre référence de dossier auprès de SOS FUITE D'EAU est la suivante ${cDossier}\n\nConformément aux dispositions de la loi n°65-557 du 10 juillet 1965, votre présence ou celle d'un représentant ainsi que l'accès au logement sont indispensables à la réalisation de cette intervention mandatée par le syndic.\n\nLa durée estimée de l'intervention est d'environ ${cDuree}.\n\nTout refus d'accès susceptible de retarder l'identification ou la résolution du sinistre pourra engager la responsabilité du propriétaire en cas de préjudice causé à la copropriété ou aux lots voisins.\n\nCordialement,`;
   document.getElementById('c_link').href = buildMailto(cEmails, cCc, cSujet, cCorps);
 
   // PRISE EN CHARGE
@@ -333,7 +317,7 @@ function updateAll() {
   const pecAquareport = document.getElementById('pec_aquareport').value || 'XXXXXXXXX';
   const pecRefClient = document.getElementById('pec_ref_client').value || 'XXXXXXXXX';
   const pecSujet = document.getElementById('pec_sujet').value || `Prise en charge Recherche fuites d'eau`;
-  const pecCorps = `Madame, Monsieur,\n\nNous vous confirmons la bonne prise en charge de votre demande de recherche de fuite.\n\nNotre référence : ${pecAquareport}\n\nVotre référence : ${pecRefClient}\n\nNous restons à votre disposition pour toute information complémentaire.\n\nCordialement,`;
+  const pecCorps = `Madame, Monsieur,\n\nNous vous confirmons la bonne prise en charge de votre demande de recherche de fuite.\n\nNotre référence : ${pecAquareport}\n\nVotre référence : ${pecRefClient}\n\nNous revenons vers vous très rapidement pour la suite de votre dossier.\n\nCordialement,`;
   document.getElementById('pec_link').href = buildMailto(pecEmails, pecCc, pecSujet, pecCorps);
 
   // ENVOI RAPPORT
@@ -344,33 +328,12 @@ function updateAll() {
   const rCorps = `Bonjour ${rNom},\n\nLe rapport d'intervention est adressé exclusivement au mandataire ayant commandé la prestation (syndic, assurance, expert ou gestionnaire), qui reste seul habilité à le communiquer aux personnes concernées.\n\nNous vous invitons donc à vous rapprocher de votre syndic ou assurance afin d'obtenir ce document.\n\nCordialement,`;
   document.getElementById('r_link').href = buildMailto(rEmails, rCc, rSujet, rCorps);
 
-// REDIRECTION
-
-const redEmails = getEmails('red_emails');
-const redCc = getEmails('red_cc');
-
-const redSujet = `Information - Gestion de votre demande`;
-
-const redCorps = `Bonjour,
-
-Afin d’assurer un traitement rapide de vos demandes, nous vous remercions de bien vouloir adresser toute demande d’intervention, de devis, de rapport ou toute autre demande administrative à contact@sosfuitedeau.com.
-
-Notre plateau technique centralise l’ensemble des demandes et assure leur traitement, leur suivi ainsi que la planification des interventions.
-
-Nos boites mails « opérateur » gèrent uniquement les organisations des interventions et les prises de rendez-vous.
-
-Nos techniciens sont exclusivement dédiés aux interventions sur le terrain et ne sont pas en mesure de gérer les demandes administratives ou les prises de rendez-vous.
-
-Nous vous remercions de votre compréhension et de votre collaboration.
-
-Bien cordialement,`;
-
-document.getElementById('red_link').href = buildMailto(
-  redEmails,
-  redCc,
-  redSujet,
-  redCorps
-);
+  // REDIRECTION
+  const redEmails = getEmails('red_emails');
+  const redCc = getEmails('red_cc');
+  const redSujet = `Information - Gestion de votre demande`;
+  const redCorps = `Bonjour,\n\nPour une meilleure gestion, nos boites mails « opérateur » gèrent uniquement les organisations des interventions et les prises de rendez-vous.\nPour toute demande d'intervention, de devis, de rapport ou autre, merci d'adresser vos mails à contact@sosfuitedeau.com.\nVous remerciant de votre compréhension.\n\nBien cordialement,`;
+  document.getElementById('red_link').href = buildMailto(redEmails, redCc, redSujet, redCorps);
 
   // DEVIS
   const devEmails = getEmails('dev_emails');
@@ -390,13 +353,6 @@ document.getElementById('red_link').href = buildMailto(
   const sSujet = `Suivi de votre demande d'intervention n° ${sRef}`;
   const sCorps = `Madame, Monsieur,\n\nNous faisons suite à votre demande d'intervention concernant le dossier référencé ci-dessus.\n\nÀ ce jour, l'intervention n'a pas encore pu être planifiée en raison de ${sMotif}.\n\nNous vous confirmons que le dossier fait l'objet d'un suivi quotidien par nos équipes et que tout est mis en œuvre afin de programmer l'intervention dans les meilleurs délais.\n\nNous ne manquerons pas de vous informer dès que le rendez-vous sera fixé ou si des éléments complémentaires devaient être nécessaires.\n\nNous vous remercions de votre compréhension et restons à votre disposition pour tout renseignement complémentaire.\n\nCordialement,`;
   document.getElementById('s_link').href = buildMailto(sEmails, sCc, sSujet, sCorps);
-
-  // PROPOSITION PLOMBERIE
-  const plbEmails = getEmails('plb_emails');
-  const plbCc = getEmails('plb_cc');
-  const plbSujet = `Suite à notre intervention`;
-  const plbCorps = `Bonjour,\n\nNous faisons suite à notre intervention de recherche de fuite du rapport ci-joint .\n\nNotre département plomberie peut vous transmettre un devis si vous le souhaiter.\n\nDans l'attente de votre retour.\n\nCordialement,`;
-  document.getElementById('plb_link').href = buildMailto(plbEmails, plbCc, plbSujet, plbCorps);
 }
 </script>
 </body>
