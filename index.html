@@ -317,7 +317,7 @@ function updateAll() {
   const pecAquareport = document.getElementById('pec_aquareport').value || 'XXXXXXXXX';
   const pecRefClient = document.getElementById('pec_ref_client').value || 'XXXXXXXXX';
   const pecSujet = document.getElementById('pec_sujet').value || `Prise en charge Recherche fuites d'eau`;
-  const pecCorps = `Madame, Monsieur,\n\nNous vous confirmons la bonne prise en charge de votre demande de recherche de fuite.\n\nNotre référence : ${pecAquareport}\n\nVotre référence : ${pecRefClient}\n\nNous prenons en charge votre dossier et reviendrons vers vous très rapidement pour la suite de votre demande.\n\nCordialement,`;
+  const pecCorps = `Madame, Monsieur,\n\nNous vous confirmons la bonne prise en charge de votre demande.\n\nNotre référence : ${pecAquareport}\n\nVotre référence : ${pecRefClient}\n\nNous prenons en charge votre dossier et reviendrons vers vous très rapidement pour la suite de votre demande.\n\nCordialement,`;
   document.getElementById('pec_link').href = buildMailto(pecEmails, pecCc, pecSujet, pecCorps);
 
   // ENVOI RAPPORT
