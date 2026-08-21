@@ -124,10 +124,7 @@
       </div>
       <div class="divider"></div>
       <div class="field"><label>Date du RDV</label><input type="date" id="c_date" oninput="updateAll()"></div>
-      <div class="row">
-        <div class="field"><label>Heure début créneau</label><input type="time" id="c_heure_debut" oninput="updateAll()"></div>
-        <div class="field"><label>Heure fin créneau</label><input type="time" id="c_heure_fin" oninput="updateAll()"></div>
-      </div>
+      <div class="field"><label>Créneau</label><input type="text" id="c_creneau" placeholder="ex : 8h00 à 12h00" oninput="updateAll()"></div>
       <div class="field"><label>Durée estimée</label>
         <div class="duree-wrap">
           <select id="c_h" onchange="updateAll()"><option value="0">0h</option><option value="1" selected>1h</option><option value="2">2h</option><option value="3">3h</option><option value="4">4h</option><option value="5">5h</option><option value="6">6h</option></select>
@@ -306,11 +303,10 @@ function updateAll() {
   const cRef = document.getElementById('c_ref').value || 'RefXXX';
   const cDossier = document.getElementById('c_dossier').value || 'XXXX';
   const cDate = formatDate(document.getElementById('c_date').value);
-  const cHeureDebut = formatHeure(document.getElementById('c_heure_debut').value);
-  const cHeureFin = formatHeure(document.getElementById('c_heure_fin').value);
+  const cCreneau = document.getElementById('c_creneau').value || '___';
   const cDuree = formatDuree('c_h', 'c_m');
   const cSujet = `Confirmation de rendez-vous - ${cRef} - Intervention : ${cDossier}`;
-  const cCorps = `Madame, Monsieur,\n\nNous vous confirmons notre intervention de recherche de fuite prévue le ${cDate}, sur le créneau de ${cHeureDebut} à ${cHeureFin}.\n\nVotre référence de dossier auprès de SOS FUITE D'EAU est la suivante : ${cDossier}.\n\nVotre présence ou celle d'un représentant ainsi que l'accès au logement sont indispensables pendant l'ensemble du créneau convenu afin de permettre la réalisation de l'intervention mandatée.\n\nL'ordre de passage de nos techniciens étant organisé en fonction des contraintes des différentes interventions, nous ne pouvons garantir une heure précise de passage à l'intérieur de ce créneau.\n\nLa durée de l'intervention est estimée à environ ${cDuree}.\n\nTout refus ou impossibilité d'accès susceptible de retarder l'identification ou la résolution du sinistre pourra engager la responsabilité du propriétaire en cas de préjudice causé à la copropriété ou aux lots voisins.\n\nCordialement,`;
+  const cCorps = `Madame, Monsieur,\n\nNous vous confirmons notre intervention de recherche de fuite prévue le ${cDate}, sur le créneau de ${cCreneau}.\n\nVotre référence de dossier auprès de SOS FUITE D'EAU est la suivante : ${cDossier}.\n\nVotre présence ou celle d'un représentant ainsi que l'accès au logement sont indispensables pendant l'ensemble du créneau convenu afin de permettre la réalisation de l'intervention mandatée.\n\nL'ordre de passage de nos techniciens étant organisé en fonction des contraintes des différentes interventions, nous ne pouvons garantir une heure précise de passage à l'intérieur de ce créneau.\n\nLa durée de l'intervention est estimée à environ ${cDuree}.\n\nTout refus ou impossibilité d'accès susceptible de retarder l'identification ou la résolution du sinistre pourra engager la responsabilité du propriétaire en cas de préjudice causé à la copropriété ou aux lots voisins.\n\nCordialement,`;
   document.getElementById('c_link').href = buildMailto(cEmails, cCc, cSujet, cCorps);
 
   // PRISE EN CHARGE
